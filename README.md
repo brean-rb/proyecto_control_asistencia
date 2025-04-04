@@ -176,6 +176,6 @@ Este proyecto es de uso **educativo**, desarrollado dentro del módulo de **Proy
 
 ---
 
-Desarrollado por: **[Tu Nombre o Alias]**  
+Desarrollado por: **Rubén Ferrer**  
 Centro: **IES Joan Coromines**  
 Curso: **DAW 2024–2025**
