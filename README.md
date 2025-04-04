@@ -1,15 +1,14 @@
-```markdown
 # 📚 Aplicación de Control de Asistencia y Gestión de Guardias
 
-Este proyecto ha sido desarrollado como parte del módulo de Proyecto del Ciclo Superior de Desarrollo de Aplicaciones Web (DAW). La aplicación permite llevar un control del inicio y fin de jornada laboral del profesorado, así como gestionar las guardias en caso de ausencias.
+Este proyecto ha sido desarrollado como parte del módulo de **Proyecto del Ciclo Superior de Desarrollo de Aplicaciones Web (DAW)**. La aplicación permite llevar un control del inicio y fin de jornada laboral del profesorado, así como gestionar las guardias en caso de ausencias.
 
 ---
 
 ## ⚙️ Requisitos
 
-- PHP 7.4 o superior  
-- MySQL / MariaDB  
-- XAMPP (recomendado para pruebas locales)  
+- **PHP** 7.4 o superior  
+- **MySQL / MariaDB**  
+- **XAMPP** (recomendado para pruebas locales)  
 - Navegador moderno (Chrome, Firefox, Edge...)
 
 ---
@@ -34,14 +33,14 @@ O hazlo manualmente moviendo la carpeta al directorio `htdocs`.
 
 ### 4. Crea la base de datos
 
-1. Abre [http://localhost/phpmyadmin](http://localhost/phpmyadmin)  
+1. Abre [http://localhost/phpmyadmin](http://localhost/phpmyadmin).  
 2. Crea una base de datos llamada:
 
-```
-gestion_guardias_asistencias
-```
+   ```
+   gestion_guardias_asistencias
+   ```
 
-3. Importa el archivo SQL que encontrarás en el proyecto (`base_datos/guardias.sql`) para generar todas las tablas necesarias.
+3. Importa el archivo SQL que encontrarás en el proyecto (`database/guardias.sql`) para generar todas las tablas necesarias.
 
 ---
 
@@ -131,34 +130,43 @@ Visible solo para usuarios con rol **admin**:
 ## 📂 Estructura del proyecto
 
 ```
-TU_REPOSITORIO/
+control_asistencia_y_gestion_guardias/
 ├── client/
-│   └── src/
-│       ├── css/
-│       ├── js/
-│       ├── login.php
-│       └── index.php
+│   ├── src/
+│   │   ├── css/
+│   │   │   └── styles.css
+│   │   ├── js/
+│   │   │   └── app.js
+│   │   ├── imgs/
+│   │   ├── login.php
+│   │   └── index.php
+│   └── vendor/
+│       └── bootstrap-5.0.2-dist/
+│           ├── css/
+│           └── js/
 ├── server/
 │   ├── config/
+│   │   └── config.php
+│   ├── horarios.php
 │   ├── login.php
 │   ├── logout.php
-│   ├── horarios.php
 │   ├── registrar_jornada.php
 │   └── registro_sesion.txt
-├── base_datos/
+├── database/
 │   └── guardias.sql
+└── README.md
 ```
 
 ---
 
 ## 🛠 Tecnologías utilizadas
 
-- HTML5 / CSS3  
-- Bootstrap 5 (local)  
-- JavaScript  
-- PHP (sin frameworks)  
-- MySQL  
-- XAMPP
+- **HTML5 / CSS3**  
+- **Bootstrap 5** (local)  
+- **JavaScript**  
+- **PHP** (sin frameworks)  
+- **MySQL**  
+- **XAMPP**
 
 ---
 
@@ -171,4 +179,3 @@ Este proyecto es de uso **educativo**, desarrollado dentro del módulo de **Proy
 Desarrollado por: **[Tu Nombre o Alias]**  
 Centro: **IES Joan Coromines**  
 Curso: **DAW 2024–2025**
-```
