@@ -259,3 +259,137 @@ h2, h3 {
 .table-hover tbody tr:hover {
     background-color: rgba(255,94,94,0.05);
 }
+
+/* Añadir al final del archivo */
+
+/* Estilos para el formulario de registro de ausencias */
+.card {
+    border: none;
+    border-radius: var(--border-radius);
+    background-color: white;
+}
+
+.card .form-label {
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+
+.input-group-text {
+    border: none;
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+.input-group .form-control {
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+}
+
+.form-control {
+    border: 1px solid #dee2e6;
+    padding: 0.75rem;
+    border-radius: var(--border-radius);
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(255, 94, 94, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.bg-light {
+    background-color: #f8f9fa !important;
+}
+
+.border {
+    border-color: #dee2e6 !important;
+}
+
+/* Animaciones para los campos */
+#campo-mismo-dia,
+#campo-periodo {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Añadir al final del archivo actual */
+
+/* Estilos para el formulario de ausencias */
+.form-bloque {
+    background-color: #111;
+    color: white;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-bloque .form-label {
+    color: white;
+    margin-bottom: 0.8rem;
+}
+
+.form-bloque .form-control {
+    border-radius: 0.5rem;
+    border: none;
+    padding: 0.75rem 1rem;
+}
+
+/* Estilos para los radio buttons */
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.radio-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
+
+.radio-option label {
+    position: relative;
+    padding-left: 2rem;
+    cursor: pointer;
+    line-height: 1.5;
+}
+
+.radio-option label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 2px solid white;
+    border-radius: 50%;
+}
+
+.radio-option input[type="radio"]:checked + label::after {
+    content: '';
+    position: absolute;
+    left: 0.35rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: white;
+    border-radius: 50%;
+}
+
+/* Botón guardar */
+.btn-guardar {
+    background-color: #ff5e5e;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-guardar:hover {
+    background-color: #e74c4c;
+    transform: translateY(-2px);
+}

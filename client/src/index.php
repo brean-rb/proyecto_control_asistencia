@@ -65,7 +65,7 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor'; // por defecto 'profesor'
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="adminDropdown">
                                 <li><a class="dropdown-item" href="#">Asistencias</a></li>
-                                <li><a class="dropdown-item" href="#">Registro Ausencia</a></li>
+                                <li><a class="dropdown-item" href="registro_ausencia.php">Registro Ausencia</a></li>
                                 <li><a class="dropdown-item" href="#">Informe Ausencia</a></li>
                             </ul>
                         </li>
@@ -98,7 +98,7 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor'; // por defecto 'profesor'
     <div class="container py-4"> <!-- Añadido padding vertical -->
         <div class="row justify-content-center">
             <div class="col-lg-8"> <!-- Contenido más centrado -->
-                <h2 class="text-center mb-4">Bienvenido, <?php echo htmlspecialchars($_SESSION['dni']); ?></h2>
+                <h2 class="text-center mb-4">Bienvenido, <?php echo htmlspecialchars($_SESSION['nombre_completo'] ?? $_SESSION['dni']); ?></h2>
                 
                 <!-- Botones para inicio/fin de jornada -->
                 <div class="d-flex justify-content-center gap-4 mb-5">
