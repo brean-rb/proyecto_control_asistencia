@@ -13,17 +13,16 @@ if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true) {
 $dni = mysqli_real_escape_string($conexion, $_SESSION['dni']);
 
 $sql = "SELECT 
-            ho.dia_setmana,
-            ho.hora_desde,
-            ho.hora_fins,
+            hg.dia_setmana,
+            hg.hora_desde,
+            hg.hora_fins,
             c.nom_val AS asignatura,
-            ho.ensenyament AS grupo,
-            a.aula AS aula
-        FROM horari_ocupacions ho
-        LEFT JOIN continguts c ON c.codi = ho.ocupacio
-        LEFT JOIN aules a ON a.codi = ho.plantilla
-        WHERE ho.docent = '$dni'
-        ORDER BY FIELD(ho.dia_setmana, 'L', 'M', 'X', 'J', 'V'), ho.hora_desde";
+            hg.grup AS grupo,         
+            hg.aula AS aula
+        FROM horari_grup hg
+        LEFT JOIN continguts c ON c.codi = hg.contingut
+        WHERE hg.docent = '$dni'
+        ORDER BY FIELD(hg.dia_setmana, 'L', 'M', 'X', 'J', 'V'), hg.hora_desde";
 
 $result = mysqli_query($conexion, $sql);
 
