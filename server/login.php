@@ -23,17 +23,10 @@ $result = mysqli_query($conexion, $sql);
 
 if ($row = mysqli_fetch_assoc($result)) {
     // Verificar password
-    if ($row['password'] === $password) {
-        // Login correcto
-        $_SESSION['dni'] = $dni;
+    if ($row && $row['password'] === $password) {
+        $_SESSION['dni'] = trim($row['documento']); // Asegúrate de que no hay espacios
         $_SESSION['rol'] = $row['rol'];
         $_SESSION['autenticado'] = true;
-
-        // Registrar en archivo de texto
-        $registro = date('Y-m-d H:i:s') . " - $dni inició sesión\n";
-        file_put_contents(__DIR__ . '/registro_sesion.txt', $registro, FILE_APPEND);
-
-        // Redirigir
         header('Location: ../client/src/index.php');
         exit();
     }

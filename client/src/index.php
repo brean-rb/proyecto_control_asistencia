@@ -23,16 +23,16 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor'; // por defecto 'profesor'
     <link rel="stylesheet" href="../vendor/bootstrap-5.0.2-dist/css/bootstrap.min.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Tu propio CSS -->
+    <!-- CSS -->
     <link rel="stylesheet" href="./css/styles.css">
 </head>
 <body class="bg-light">
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-4">
-        <div class="container"> <!-- Cambiado de container-fluid a container -->
+        <div class="container">
             <!-- Logo / Nombre del centro -->
-            <a class="navbar-brand fw-bold" href="#">
+            <a class="navbar-brand text-dark fw-bold" href="#">
                 IES Joan Coromines
             </a>
 
@@ -114,6 +114,25 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor'; // por defecto 'profesor'
 
                 <!-- Título de horario -->
                 <h3 class="text-center fw-bold mb-4">Su horario</h3>
+
+                <!-- Después de tu h3 "Su horario" -->
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Día</th>
+                                <th>Hora Inicio</th>
+                                <th>Hora Fin</th>
+                                <th>Asignatura</th>
+                                <th>Grupo</th>
+                                <th>Aula</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaHorario">
+                            <!-- Aquí se cargarán los datos dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
