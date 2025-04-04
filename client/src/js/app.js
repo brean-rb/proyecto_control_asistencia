@@ -19,12 +19,11 @@ document.addEventListener('DOMContentLoaded', function() {
 function cargarHorario() {
     fetch('/control_asistencia_y_gestion_guardias/server/horarios.php')
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la respuesta: ' + response.status);
-            }
+            console.log('Estado de la respuesta:', response.status);
             return response.json();
         })
         .then(data => {
+            console.log('Datos recibidos:', data); // Verifica que aquí se imprimen los datos
             const tbody = document.getElementById('tablaHorario');
             tbody.innerHTML = '';
 
@@ -55,6 +54,7 @@ function cargarHorario() {
             });
         })
         .catch(error => {
+            console.error('Error al procesar el horario:', error);
             const tbody = document.getElementById('tablaHorario');
             tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">
                 Error al cargar el horario: ${error.message}
