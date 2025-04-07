@@ -146,22 +146,56 @@ h2, h3 {
 /* ================================= */
 /* 3. Botones                        */
 /* ================================= */
+
 .btn {
-    border-radius: var(--border-radius);
-    padding: 0.8rem 1.5rem;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    min-width: 140px; 
+    border: none;
+    text-decoration: none;
+    font-size: 1rem;
     font-weight: 500;
-    transition: var(--transition);
+    font-family: 'Poppins', sans-serif;
+}
+
+.btn i {
+    margin-right: 0.5rem;
+    font-size: 1rem;
+}
+
+.btn i,
+.btn span {
+    position: relative;
+    z-index: 1;
 }
 
 .btn-danger {
-    background-color: var(--primary-color) !important;
-    border: none;
-    padding: 0.6rem 1.2rem;
+    background-color: var(--primary-color);
+    color: white !important;
 }
 
 .btn-danger:hover {
-    background-color: #e24c4c !important;
+    background-color: #e74c4c;
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    color: white !important;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white !important;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    color: white !important;
 }
 
 .btn-inicio-jornada,
@@ -381,15 +415,70 @@ h2, h3 {
 
 /* Botón guardar */
 .btn-guardar {
-    background-color: #ff5e5e;
+    background-color: var(--primary-color);
     color: white;
     padding: 0.5rem 1.5rem;
     border-radius: 20px;
     border: none;
     transition: all 0.3s ease;
+    cursor: pointer;
 }
 
 .btn-guardar:hover {
     background-color: #e74c4c;
     transform: translateY(-2px);
 }
+
+.btn-guardar:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.25rem rgba(255, 94, 94, 0.25);
+}
+
+/* Estilos para la búsqueda de profesor */
+#resultados-profesor {
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+#resultados-profesor .list-group-item {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#resultados-profesor .list-group-item:hover {
+    background-color: #f8f9fa;
+    color: var(--primary-color);
+}
+
+/* Estilos para el campo de motivo */
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+
+button[type="submit"],
+.btn-danger {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    z-index: 10;
+    position: relative;
+    display: inline-flex !important;
+    align-items: center;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-danger {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #e74c4c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+

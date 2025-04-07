@@ -66,6 +66,24 @@ $rolUsuario = $_SESSION['rol'];
         </div>
     </nav>
 
+    <!-- Modal de éxito -->
+    <div class="modal fade" id="exitoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">¡Éxito!</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>La ausencia se ha registrado correctamente.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Contenido principal -->
     <div class="container py-4">
         <div class="row justify-content-center">
@@ -75,14 +93,14 @@ $rolUsuario = $_SESSION['rol'];
                         <h2 class="text-center fw-bold mb-4">Registro de Ausencia</h2>
                         
                         <form id="form-ausencia" action="../../server/procesar_ausencia.php" method="POST">
-                            <!-- DNI Profesor -->
+                            <!-- Reemplazar la sección de búsqueda de profesor por esto -->
                             <div class="mb-4">
-                                <label for="profesor" class="form-label fw-bold">DNI del profesor</label>
+                                <label for="documento" class="form-label fw-bold">DNI del profesor</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-dark text-light">
                                         <i class="fas fa-id-card"></i>
                                     </span>
-                                    <input type="text" id="profesor" name="documento" class="form-control" required>
+                                    <input type="text" id="documento" name="documento" class="form-control" placeholder="Introduce el DNI..." required>
                                 </div>
                             </div>
 
@@ -141,14 +159,34 @@ $rolUsuario = $_SESSION['rol'];
                                 </div>
                             </div>
 
-                            <!-- Botones -->
-                            <div class="d-flex justify-content-end gap-2 mt-4">
+                            <!-- Campo motivo -->
+                            <div class="mb-4">
+                                <div class="bg-light p-3 rounded border">
+                                    <label for="motivo" class="form-label fw-bold">Motivo de la ausencia</label>
+                                    <textarea id="motivo" name="motivo" class="form-control" rows="3" required></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Después del campo motivo y antes de los botones -->
+                            <div class="mb-4">
+                                <div class="bg-light p-3 rounded border">
+                                    <div class="form-check">
+                                        <input type="checkbox" id="justificada" name="justificada" class="form-check-input" value="1">
+                                        <label for="justificada" class="form-label fw-bold">
+                                            <i class="fas fa-check-circle me-2"></i>Ausencia justificada
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Reemplazar la sección de los botones -->
+                            <div class="d-flex justify-content-center gap-3 mt-4">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-save me-2"></i>guardar
+                                </button>
                                 <a href="index.php" class="btn btn-secondary">
                                     <i class="fas fa-times me-2"></i>Cancelar
                                 </a>
-                                <button type="submit" class="btn btn-danger">
-                                    <i class="fas fa-save me-2"></i>Guardar
-                                </button>
                             </div>
                         </form>
                     </div>

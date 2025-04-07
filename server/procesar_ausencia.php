@@ -9,31 +9,68 @@ if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true || $_S
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $documento = mysqli_real_escape_string($conexion, $_POST['documento']);
-    $fecha_inicio = $_POST['fecha_inicio'];
     $tipo = $_POST['tipo'];
-    
+    $motivo = mysqli_real_escape_string($conexion, $_POST['motivo']);
+    $registrado_por = $_SESSION['dni'];
+    $justificada = isset($_POST['justificada']) ? 1 : 0;
+
     if ($tipo === 'dia') {
+        $fecha = $_POST['fecha'];
         $hora_inicio = $_POST['hora_inicio'];
         $hora_fin = $_POST['hora_fin'];
-        $jornada_completa = 0;
+
+        $sql = "INSERT INTO ausencias (
+                    documento, 
+                    fecha_inicio, 
+                    fecha_fin,
+                    hora_inicio, 
+                    hora_fin, 
+                    motivo,
+                    jornada_completa,
+                    justificada,
+                    registrado_por
+                ) VALUES (
+                    '$documento', 
+                    '$fecha', 
+                    '$fecha', 
+                    '$hora_inicio', 
+                    '$hora_fin', 
+                    '$motivo', 
+                        0,
+                    $justificada,
+                    '$registrado_por'
+                )";
+
     } else {
-        $hora_inicio = '00:00:00';
-        $hora_fin = '23:59:59';
-        $jornada_completa = 1;
+        $fecha_inicio = $_POST['fecha_inicio'];
+        $fecha_fin = $_POST['fecha_fin'];
+
+        $sql = "INSERT INTO ausencias (
+                    documento, 
+                    fecha_inicio, 
+                    fecha_fin,
+                    motivo,
+                    jornada_completa,
+                    justificada,
+                    registrado_por
+                ) VALUES (
+                    '$documento', 
+                    '$fecha_inicio', 
+                    '$fecha_fin', 
+                    '$motivo', 
+                    1,
+                    $justificada,
+                    '$registrado_por'
+                )";
     }
 
-    $sql = "INSERT INTO ausencias (documento, fecha_inicio, hora_inicio, hora_fin, jornada_completa) 
-            VALUES (?, ?, ?, ?, ?)";
-            
-    $stmt = mysqli_prepare($conexion, $sql);
-    mysqli_stmt_bind_param($stmt, "ssssi", $documento, $fecha_inicio, $hora_inicio, $hora_fin, $jornada_completa);
-    
-    if (mysqli_stmt_execute($stmt)) {
-        header('Location: ../client/src/index.php?mensaje=ausencia-registrada');
+    if (mysqli_query($conexion, $sql)) {
+        header('Location: ../client/src/registro_ausencia.php');
+        exit();
     } else {
         header('Location: ../client/src/registro_ausencia.php?error=1');
+        exit();
     }
-    exit();
 }
 
 header('Location: ../client/src/registro_ausencia.php');

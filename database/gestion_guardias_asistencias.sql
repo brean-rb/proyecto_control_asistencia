@@ -91,13 +91,18 @@ INSERT INTO `aules` (`codi`, `aula`) VALUES
 --
 
 CREATE TABLE `ausencias` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `documento` varchar(10) NOT NULL,
-  `fecha_inicio` date NOT NULL,
-  `hora_inicio` time NOT NULL,
-  `hora_fin` time NOT NULL,
-  `jornada_completa` tinyint(1) NOT NULL DEFAULT 0,
-  `justificada` tinyint(1) NOT NULL DEFAULT 0
+  `fecha_inicio` date DEFAULT NULL,
+  `fecha_fin` date DEFAULT NULL,
+  `hora_inicio` time DEFAULT NULL,
+  `hora_fin` time DEFAULT NULL,
+  `motivo` text DEFAULT NULL,
+  `jornada_completa` tinyint(1) DEFAULT 0,
+  `justificada` tinyint(1) DEFAULT 0,
+  `fecha_registro` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `registrado_por` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
 -- --------------------------------------------------------
