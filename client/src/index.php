@@ -64,9 +64,9 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor'; // por defecto 'profesor'
                                 Administración
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                                <li><a class="dropdown-item" href="#">Asistencias</a></li>
+                                <li><a class="dropdown-item" href="consulta_asistencia.php">Consulta Asistencia</a></li>
                                 <li><a class="dropdown-item" href="registro_ausencia.php">Registro Ausencia</a></li>
-                                <li><a class="dropdown-item" href="#">Informe Ausencia</a></li>
+                                <li><a class="dropdown-item" href="informe_ausencias.php">Informe Ausencias</a></li>
                             </ul>
                         </li>
                     </ul>

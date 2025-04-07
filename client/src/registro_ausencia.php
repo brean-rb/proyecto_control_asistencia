@@ -25,7 +25,7 @@ $rolUsuario = $_SESSION['rol'];
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-4">
         <div class="container">
             <!-- Logo -->
-            <a class="navbar-brand text-dark fw-bold" href="#">
+            <a class="navbar-brand text-dark fw-bold" href="index.php">
                 IES Joan Coromines
             </a>
 
@@ -43,14 +43,15 @@ $rolUsuario = $_SESSION['rol'];
                     <li class="nav-item">
                         <a class="nav-link" href="#">Guardias realizadas</a>
                     </li>
+                    <!-- Actualizar esta sección del menú -->
                     <li class="nav-item dropdown">
                         <a class="nav-link active" href="#" id="adminDropdown" role="button">
                             Administración
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Asistencias</a></li>
+                            <li><a class="dropdown-item" href="consulta_asistencia.php">Consulta Asistencia</a></li>
                             <li><a class="dropdown-item active" href="registro_ausencia.php">Registro Ausencia</a></li>
-                            <li><a class="dropdown-item" href="#">Informe Ausencia</a></li>
+                            <li><a class="dropdown-item" href="informe_ausencias.php">Informe Ausencias</a></li>
                         </ul>
                     </li>
                 </ul>

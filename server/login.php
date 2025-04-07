@@ -29,9 +29,13 @@ if ($row = mysqli_fetch_assoc($result)) {
     if ($row && $row['password'] === $password) {
         $_SESSION['dni'] = trim($row['documento']);
         $_SESSION['rol'] = $row['rol'];
-        // Guardar el nombre completo en la sesión
         $_SESSION['nombre_completo'] = trim($row['nom'] . ' ' . $row['cognom1'] . ' ' . $row['cognom2']);
         $_SESSION['autenticado'] = true;
+
+        // Registrar el inicio de sesión
+        $log = date('Y-m-d H:i:s') . " - " . $_SESSION['dni'] . " inició sesión\n";
+        file_put_contents(__DIR__ . '/registro_sesion.txt', $log, FILE_APPEND);
+
         header('Location: ../client/src/index.php');
         exit();
     }
