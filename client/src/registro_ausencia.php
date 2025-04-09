@@ -24,26 +24,20 @@ $rolUsuario = $_SESSION['rol'];
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-4">
         <div class="container">
-            <!-- Logo -->
             <a class="navbar-brand text-dark fw-bold" href="index.php">
                 IES Joan Coromines
             </a>
-
-            <!-- Botón hamburguesa -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
-            <!-- Menú -->
             <div class="collapse navbar-collapse" id="navbarMain">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Guardias</a>
+                        <a class="nav-link" href="consulta_guardias.php">Guardias</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Guardias realizadas</a>
+                        <a class="nav-link" href="guardias_realizadas.php">Guardias realizadas</a>
                     </li>
-                    <!-- Actualizar esta sección del menú -->
                     <li class="nav-item dropdown">
                         <a class="nav-link active" href="#" id="adminDropdown" role="button">
                             Administración
@@ -55,7 +49,6 @@ $rolUsuario = $_SESSION['rol'];
                         </ul>
                     </li>
                 </ul>
-                <!-- Botón logout -->
                 <div class="ms-auto">
                     <form action="../../server/logout.php" method="POST">
                         <button type="submit" class="btn btn-danger">
@@ -131,15 +124,8 @@ $rolUsuario = $_SESSION['rol'];
                                         <label for="fecha" class="form-label fw-bold">Fecha</label>
                                         <input type="date" id="fecha" name="fecha" class="form-control" required>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label for="hora-inicio" class="form-label fw-bold">Hora inicio</label>
-                                            <input type="time" id="hora-inicio" name="hora_inicio" class="form-control" required>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label for="hora-fin" class="form-label fw-bold">Hora fin</label>
-                                            <input type="time" id="hora-fin" name="hora_fin" class="form-control" required>
-                                        </div>
+                                    <div id="horario-profesor" class="mb-3">
+                                        <!-- Aquí se cargarán dinámicamente las horas del profesor -->
                                     </div>
                                 </div>
                             </div>

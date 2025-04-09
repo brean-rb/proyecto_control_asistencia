@@ -27,10 +27,10 @@ if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true || $_S
             <div class="collapse navbar-collapse" id="navbarMain">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Guardias</a>
+                        <a class="nav-link" href="consulta_guardias.php">Guardias</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Guardias realizadas</a>
+                        <a class="nav-link" href="guardias_realizadas.php">Guardias realizadas</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link active" href="#" id="adminDropdown" role="button">

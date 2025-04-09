@@ -1,33 +1,24 @@
 <?php
 session_start();
-
-// Verificar si el usuario está autenticado
 if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true) {
-    header('Location: ./login.php');  // Cambiado de login.html a login.php
+    header('Location: ./login.php');
     exit();
 }
-
-// Tomamos el rol de la sesión para decidir qué mostrar
-$rolUsuario = $_SESSION['rol'] ?? 'profesor'; // por defecto 'profesor'
+// Añadir la variable de rol
+$rolUsuario = $_SESSION['rol'] ?? 'profesor';
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Control de Asistencia y Guardias</title>
-
-    <!-- Google Fonts -->
+    <title>Consulta de Guardias - IES Joan Coromines</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Bootstrap CSS (Local) -->
     <link rel="stylesheet" href="../vendor/bootstrap-5.0.2-dist/css/bootstrap.min.css">
-    <!-- Font Awesome -->
+    <!-- Añadir Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- CSS -->
     <link rel="stylesheet" href="./css/styles.css">
 </head>
 <body class="bg-light">
-
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-4">
         <div class="container">
@@ -54,7 +45,7 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor'; // por defecto 'profesor'
                     <!-- Enlaces con espaciado para admin -->
                     <ul class="navbar-nav mx-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="consulta_guardias.php">Guardias</a>
+                            <a class="nav-link active" href="consulta_guardias.php">Guardias</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="guardias_realizadas.php">Guardias realizadas</a>
@@ -74,7 +65,7 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor'; // por defecto 'profesor'
                     <!-- Enlaces centrados para profesor -->
                     <ul class="navbar-nav position-absolute start-50 translate-middle-x">
                         <li class="nav-item">
-                            <a class="nav-link px-4" href="consulta_guardias.php">Guardias</a>
+                            <a class="nav-link active px-4" href="consulta_guardias.php">Guardias</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link px-4" href="guardias_realizadas.php">Guardias realizadas</a>
@@ -93,53 +84,51 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor'; // por defecto 'profesor'
             </div>
         </div>
     </nav>
-
-    <!-- Contenido principal -->
-    <div class="container py-4"> <!-- Añadido padding vertical -->
+    <div class="container py-4">
         <div class="row justify-content-center">
-            <div class="col-lg-8"> <!-- Contenido más centrado -->
-                <h2 class="text-center mb-4">Bienvenido, <?php echo htmlspecialchars($_SESSION['nombre_completo'] ?? $_SESSION['dni']); ?></h2>
-                
-                <!-- Botones para inicio/fin de jornada -->
-                <div class="d-flex justify-content-center gap-4 mb-5">
-                    <a href="../../server/registrar_jornada.php?accion=inicio" 
-                        class="btn btn-inicio-jornada">
-                        <i class="fas fa-play me-2"></i>Inicio de jornada
-                    </a>
-                    <a href="../../server/registrar_jornada.php?accion=fin" 
-                        class="btn btn-fin-jornada">
-                        <i class="fas fa-stop me-2"></i>Finalizar jornada
-                    </a>
-                </div>
+            <div class="col-lg-12">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <h2 class="text-center fw-bold mb-4">Consulta de Guardias</h2>
+                        
+                        <form id="form-guardias" class="mb-4">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="fecha" class="form-label fw-bold">Fecha</label>
+                                    <input type="date" class="form-control" id="fecha" name="fecha" required>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fas fa-search me-2"></i>Consultar
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
 
-                <!-- Título de horario -->
-                <h3 class="text-center fw-bold mb-4">Su horario</h3>
-
-                <!-- Después de tu h3 "Su horario" -->
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Día</th>
-                                <th>Hora Inicio</th>
-                                <th>Hora Fin</th>
-                                <th>Asignatura</th>
-                                <th>Grupo</th>
-                                <th>Aula</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaHorario">
-                            <!-- Aquí se cargarán los datos dinámicamente -->
-                        </tbody>
-                    </table>
+                        <div class="table-responsive mt-4">
+                            <table class="table table-hover" id="tabla-guardias">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Docente Ausente</th>
+                                        <th>Hora Inicio</th>
+                                        <th>Hora Fin</th>
+                                        <th>Grupo</th>
+                                        <th>Aula</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Los resultados se cargarán aquí dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- JS de Bootstrap local -->
     <script src="../vendor/bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Tu JavaScript personalizado -->
-    <script src="./js/app.js"></script>
+    <script src="./js/consulta_guardias.js"></script>
 </body>
 </html>
