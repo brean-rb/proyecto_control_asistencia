@@ -2,51 +2,38 @@
 session_start();
 require_once __DIR__ . '/config/config.php';
 
-$response = ['success' => false, 'message' => '', 'guardias' => []];
+$response = ['success' => false, 'message' => '', 'profesores_ausentes' => []];
 
 try {
-    $fecha = $_POST['fecha'];
+    $fecha = date('Y-m-d'); // Fecha actual
+    $dia_semana = date('N'); // 1 (lunes) a 7 (domingo)
+    $dia_letra = ['', 'L', 'M', 'X', 'J', 'V'][intval($dia_semana)];
 
-    // Consulta para obtener las ausencias del día
-    $sql = "SELECT h.grup, h.aula, h.contingut, h.sessio_orde, h.dia_setmana, 
-                    h.hora_desde AS hora_inicio, h.hora_fins AS hora_fin, 
-                    a.documento AS docente_ausente, 
-                    CONCAT(d.nom, ' ', d.cognom1, ' ', d.cognom2) AS nombre_docente
-            FROM horari_grup h
-            LEFT JOIN ausencias a ON h.docent = a.documento 
-                AND a.fecha_inicio = '$fecha'
-            LEFT JOIN docent d ON h.docent = d.document
-            WHERE a.documento IS NOT NULL
-            AND NOT EXISTS (
-                SELECT 1 
-                FROM horari_grup h2
-                WHERE h2.grup = h.grup 
-                    AND h2.aula = h.aula 
-                    AND h2.docent != a.documento
-            )
-            ORDER BY h.hora_desde ASC";
+    // Consulta para obtener los profesores ausentes hoy
+    $sql = "SELECT DISTINCT 
+                a.documento,
+                CONCAT(d.nom, ' ', d.cognom1, ' ', d.cognom2) as nombre_docente,
+                a.motivo,
+                a.fecha_inicio,
+                a.fecha_fin
+            FROM ausencias a
+            INNER JOIN docent d ON a.documento = d.document
+            WHERE '$fecha' BETWEEN a.fecha_inicio AND a.fecha_fin
+            ORDER BY nombre_docente";
 
     $resultado = mysqli_query($conexion, $sql);
 
     if ($resultado) {
-        $guardias = [];
         while ($row = mysqli_fetch_assoc($resultado)) {
-            $guardias[] = [
-                'grupo' => $row['grup'],
-                'aula' => $row['aula'],
-                'contenido' => $row['contingut'],
-                'sesion_orden' => $row['sessio_orde'],
-                'dia_semana' => $row['dia_setmana'],
-                'hora_inicio' => $row['hora_inicio'],
-                'hora_fin' => $row['hora_fin'],
-                'docente_ausente' => $row['nombre_docente']
+            $response['profesores_ausentes'][] = [
+                'documento' => $row['documento'],
+                'nombre' => $row['nombre_docente'],
+                'motivo' => $row['motivo'],
+                'fecha_inicio' => $row['fecha_inicio'],
+                'fecha_fin' => $row['fecha_fin']
             ];
         }
-
         $response['success'] = true;
-        $response['guardias'] = $guardias;
-    } else {
-        throw new Exception(mysqli_error($conexion));
     }
 } catch (Exception $e) {
     $response['message'] = 'Error: ' . $e->getMessage();

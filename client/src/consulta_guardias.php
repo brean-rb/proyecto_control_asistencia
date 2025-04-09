@@ -84,45 +84,47 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor';
             </div>
         </div>
     </nav>
-    <div class="container py-4">
-        <div class="row justify-content-center">
-            <div class="col-lg-12">
-                <div class="card shadow-sm">
-                    <div class="card-body p-4">
-                        <h2 class="text-center fw-bold mb-4">Consulta de Guardias</h2>
-                        
-                        <form id="form-guardias" class="mb-4">
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                    <label for="fecha" class="form-label fw-bold">Fecha</label>
-                                    <input type="date" class="form-control" id="fecha" name="fecha" required>
-                                </div>
-                                <div class="col-12">
-                                    <button type="submit" class="btn btn-danger">
-                                        <i class="fas fa-search me-2"></i>Consultar
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
 
-                        <div class="table-responsive mt-4">
-                            <table class="table table-hover" id="tabla-guardias">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>Docente Ausente</th>
-                                        <th>Hora Inicio</th>
-                                        <th>Hora Fin</th>
-                                        <th>Grupo</th>
-                                        <th>Aula</th>
-                                        <th>Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Los resultados se cargarán aquí dinámicamente -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+    <div class="container py-4">
+        <input type="hidden" id="docente_actual" value="<?php echo $_SESSION['dni']; ?>">
+        
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="text-center fw-bold mb-4">Profesores Ausentes Hoy</h2>
+                <div class="table-responsive">
+                    <table class="table table-hover" id="tabla-profesores-ausentes">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Profesor</th>
+                                <th>Fecha Inicio</th>
+                                <th>Fecha Fin</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Los profesores ausentes se cargarán aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-lg-12 mt-5" id="horario-container" style="display: none;">
+                <h2 class="text-center fw-bold mb-4">Horario del Profesor</h2>
+                <div class="table-responsive">
+                    <table class="table table-hover" id="tabla-horario">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Horario</th>
+                                <th>Asignatura</th>
+                                <th>Grupo</th>
+                                <th>Aula</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- El horario se cargará aquí -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
