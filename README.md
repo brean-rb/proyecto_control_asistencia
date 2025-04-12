@@ -18,13 +18,13 @@ Este proyecto ha sido desarrollado como parte del módulo de **Proyecto del Cicl
 ### 1. Clona el repositorio
 
 ```bash
-git clone https://github.com/TU_USUARIO/TU_REPOSITORIO.git
+git clone https://github.com/brean-rb/proyecto_control_asistencia.git
 ```
 
 ### 2. Copia el proyecto a la carpeta de XAMPP
 
 ```bash
-mv TU_REPOSITORIO/ C:/xampp/htdocs/
+mv proyecto_control_asistencia/ C:/xampp/htdocs/
 ```
 
 O hazlo manualmente moviendo la carpeta al directorio `htdocs`.
@@ -53,6 +53,10 @@ Puedes usar los siguientes usuarios para iniciar sesión:
 | 11111111A   | secret     | admin     |
 | 22222222B   | secret     | profesor  |
 
+También puedes iniciar sesión con cualquier DNI de profesor que exista en la tabla `profesores`, usando siempre la contraseña `secret`.
+
+> **Nota**: Todos los profesores importados tendrán el rol de 'profesor' por defecto.
+
 ---
 
 ## 🧩 Añadir automáticamente docentes como usuarios
@@ -61,9 +65,9 @@ Usa esta consulta SQL para insertar todos los docentes en la tabla `usuarios` co
 
 ```sql
 INSERT INTO usuarios (documento, password, rol)
-SELECT d.document, 'secret', 'profesor'
-FROM docent d
-WHERE d.document NOT IN (SELECT u.documento FROM usuarios u);
+SELECT p.dni, 'secret', 'profesor'
+FROM profesores p
+WHERE p.dni NOT IN (SELECT u.documento FROM usuarios u);
 ```
 
 ---
@@ -92,7 +96,7 @@ define('DATABASE', 'gestion_guardias_asistencias');
 Abre tu navegador y accede a:
 
 ```
-http://localhost/TU_REPOSITORIO/client/src/login.php
+http://localhost/proyecto_control_asistencia/client/src/login.php
 ```
 
 Inicia sesión con cualquiera de los usuarios de prueba.
