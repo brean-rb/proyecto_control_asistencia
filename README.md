@@ -61,6 +61,8 @@ También puedes iniciar sesión con cualquier DNI de profesor que exista en la t
 
 ## 🧩 Añadir automáticamente docentes como usuarios
 
+> ⚠️ **IMPORTANTE**: Este paso solo es necesario si utilizas la base de datos `guardias.sql`. Si estás usando `gestion_guardias_asistencias.sql`, los usuarios ya están creados automáticamente.
+
 Usa esta consulta SQL para insertar todos los docentes en la tabla `usuarios` como profesores:
 
 ```sql
@@ -136,27 +138,36 @@ Visible solo para usuarios con rol **admin**:
 ```
 control_asistencia_y_gestion_guardias/
 ├── client/
-│   ├── src/
-│   │   ├── css/
-│   │   │   └── styles.css
-│   │   ├── js/
-│   │   │   └── app.js
-│   │   ├── imgs/
-│   │   ├── login.php
-│   │   └── index.php
-│   └── vendor/
-│       └── bootstrap-5.0.2-dist/
-│           ├── css/
-│           └── js/
+│   └── src/
+│       ├── css/
+│       │   └── styles.css
+│       ├── js/
+│       │   ├── login.js
+│       │   ├── consulta_guardias.js
+│       │   ├── registro_ausencia.js
+│       │   ├── consulta_asistencia.js
+│       │   └── informe_ausencias.js
+│       ├── login.php
+│       ├── index.php
+│       ├── consulta_guardias.php
+│       ├── consulta_asistencia.php
+│       ├── registro_ausencia.php
+│       └── informe_ausencias.php
 ├── server/
 │   ├── config/
 │   │   └── config.php
+│   ├── consultar_asistencia.php
+│   ├── consultar_guardias.php
+│   ├── generar_informe.php
 │   ├── horarios.php
-│   ├── login.php
-│   ├── logout.php
+│   ├── obtener_horario_ausente.php
+│   ├── obtener_horario_profesor.php
+│   ├── procesar_ausencia.php
+│   ├── registrar_guardia.php
 │   ├── registrar_jornada.php
 │   └── registro_sesion.txt
 ├── database/
+│   ├── gestion_guardias_asistencias.sql
 │   └── guardias.sql
 └── README.md
 ```
