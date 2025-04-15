@@ -18,13 +18,13 @@ Este proyecto ha sido desarrollado como parte del módulo de **Proyecto del Cicl
 ### 1. Clona el repositorio
 
 ```bash
-git clone https://github.com/TU_USUARIO/TU_REPOSITORIO.git
+git clone https://github.com/brean-rb/proyecto_control_asistencia.git
 ```
 
 ### 2. Copia el proyecto a la carpeta de XAMPP
 
 ```bash
-mv TU_REPOSITORIO/ C:/xampp/htdocs/
+mv proyecto_control_asistencia/ C:/xampp/htdocs/
 ```
 
 O hazlo manualmente moviendo la carpeta al directorio `htdocs`.
@@ -53,17 +53,23 @@ Puedes usar los siguientes usuarios para iniciar sesión:
 | 11111111A   | secret     | admin     |
 | 22222222B   | secret     | profesor  |
 
+También puedes iniciar sesión con cualquier DNI de profesor que exista en la tabla `profesores`, usando siempre la contraseña `secret`.
+
+> **Nota**: Todos los profesores importados tendrán el rol de 'profesor' por defecto.
+
 ---
 
 ## 🧩 Añadir automáticamente docentes como usuarios
+
+> ⚠️ **IMPORTANTE**: Este paso solo es necesario si utilizas la base de datos `guardias.sql`. Si estás usando `gestion_guardias_asistencias.sql`, los usuarios ya están creados automáticamente.
 
 Usa esta consulta SQL para insertar todos los docentes en la tabla `usuarios` como profesores:
 
 ```sql
 INSERT INTO usuarios (documento, password, rol)
-SELECT d.document, 'secret', 'profesor'
-FROM docent d
-WHERE d.document NOT IN (SELECT u.documento FROM usuarios u);
+SELECT p.dni, 'secret', 'profesor'
+FROM profesores p
+WHERE p.dni NOT IN (SELECT u.documento FROM usuarios u);
 ```
 
 ---
@@ -92,7 +98,7 @@ define('DATABASE', 'gestion_guardias_asistencias');
 Abre tu navegador y accede a:
 
 ```
-http://localhost/TU_REPOSITORIO/client/src/login.php
+http://localhost/proyecto_control_asistencia/client/src/login.php
 ```
 
 Inicia sesión con cualquiera de los usuarios de prueba.
@@ -132,27 +138,36 @@ Visible solo para usuarios con rol **admin**:
 ```
 control_asistencia_y_gestion_guardias/
 ├── client/
-│   ├── src/
-│   │   ├── css/
-│   │   │   └── styles.css
-│   │   ├── js/
-│   │   │   └── app.js
-│   │   ├── imgs/
-│   │   ├── login.php
-│   │   └── index.php
-│   └── vendor/
-│       └── bootstrap-5.0.2-dist/
-│           ├── css/
-│           └── js/
+│   └── src/
+│       ├── css/
+│       │   └── styles.css
+│       ├── js/
+│       │   ├── login.js
+│       │   ├── consulta_guardias.js
+│       │   ├── registro_ausencia.js
+│       │   ├── consulta_asistencia.js
+│       │   └── informe_ausencias.js
+│       ├── login.php
+│       ├── index.php
+│       ├── consulta_guardias.php
+│       ├── consulta_asistencia.php
+│       ├── registro_ausencia.php
+│       └── informe_ausencias.php
 ├── server/
 │   ├── config/
 │   │   └── config.php
+│   ├── consultar_asistencia.php
+│   ├── consultar_guardias.php
+│   ├── generar_informe.php
 │   ├── horarios.php
-│   ├── login.php
-│   ├── logout.php
+│   ├── obtener_horario_ausente.php
+│   ├── obtener_horario_profesor.php
+│   ├── procesar_ausencia.php
+│   ├── registrar_guardia.php
 │   ├── registrar_jornada.php
 │   └── registro_sesion.txt
 ├── database/
+│   ├── gestion_guardias_asistencias.sql
 │   └── guardias.sql
 └── README.md
 ```
