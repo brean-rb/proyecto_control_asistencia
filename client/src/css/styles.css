@@ -174,16 +174,54 @@ h2, h3 {
     z-index: 1;
 }
 
-.btn-danger {
-    background-color: var(--primary-color);
-    color: white !important;
+/* Botones personalizados */
+.btn.btn-primary,
+button.btn-primary,
+.custom-primary-button {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: var(--text-light) !important;
 }
 
-.btn-danger:hover {
-    background-color: #e74c4c;
+.btn.btn-primary:hover,
+button.btn-primary:hover {
+    background-color: #e74c4c !important;
+    border-color: #e74c4c !important;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     color: white !important;
+}
+
+.btn.btn-primary:focus,
+button.btn-primary:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 94, 94, 0.25) !important;
+}
+
+.btn.btn-outline-primary,
+button.btn-outline-primary {
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.btn.btn-outline-primary:hover,
+button.btn-outline-primary:hover {
+    color: white !important;
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.btn.btn-outline-primary:focus,
+button.btn-outline-primary:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 94, 94, 0.25) !important;
+}
+
+.btn.btn-outline-primary:active,
+button.btn-outline-primary:active,
+.btn.btn-outline-primary.active,
+button.btn-outline-primary.active {
+    color: white !important;
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
 }
 
 .btn-secondary {
@@ -472,13 +510,50 @@ button[type="submit"],
 }
 
 .btn-danger {
-    background-color: var(--primary-color);
-    color: white;
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    border: none !important;
+    padding: 0.6rem 1.2rem !important;
+    border-radius: var(--border-radius) !important;
+    transition: all 0.3s ease !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    min-width: 120px;
 }
 
 .btn-danger:hover {
-    background-color: #e74c4c;
+    background-color: #e74c4c !important;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn-danger:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 94, 94, 0.25) !important;
+}
+
+/* ================================= */
+/* Utilidades de color               */
+/* ================================= */
+
+.custom-primary {
+    color: var(--primary-color) !important;
+}
+
+.bg-custom-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.border-custom-primary {
+    border-color: var(--primary-color) !important;
+}
+
+.hover-custom-primary:hover {
+    color: var(--primary-color) !important;
+}
+
+.bg-hover-custom-primary:hover {
+    background-color: var(--primary-color) !important;
 }
 

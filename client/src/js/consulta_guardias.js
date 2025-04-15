@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${profesor.fecha_inicio}</td>
                 <td>${profesor.fecha_fin}</td>
                 <td>
-                    <button class="btn btn-primary btn-sm ver-horario" 
+                    <button class="btn btn-danger ver-horario" 
                             data-documento="${profesor.documento}">
                         Ver Horario
                     </button>
