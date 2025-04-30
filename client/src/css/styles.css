@@ -1,0 +1,559 @@
+/* ================================= */
+/* 1. General / Reset                */
+/* ================================= */
+:root {
+    --primary-color: #FF5E5E;
+    --text-light: #fff;
+    --text-dark: #333;
+    --border-radius: 20px;
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+h2, h3 {
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+/* ================================= */
+/* 2. Navbar                         */
+/* ================================= */
+
+.navbar {
+    border-bottom: 2px solid #333;
+    background-color: #fff !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 1rem 0;
+}
+
+.navbar .navbar-brand {
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+
+.navbar .navbar-brand.text-dark {
+    color: var(--text-dark) !important;
+}
+
+.nav-link {
+    color: var(--text-dark) !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    transition: var(--transition);
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: var(--primary-color);
+    transition: var(--transition);
+    transform: translateX(-50%);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* Estilos del dropdown */
+.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+}
+
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 0.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(255,94,94,0.1);
+    color: var(--primary-color);
+}
+
+/* Actualiza la sección del navbar */
+
+.custom-dropdown {
+    position: relative;
+    padding-right: 2rem !important;
+}
+
+.custom-dropdown::after {
+    content: '\f107'; /* FontAwesome chevron-down */
+    font-family: 'Font Awesome 6 Free'; 
+    font-weight: 900;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dark);
+    transition: transform 0.3s ease;
+    pointer-events: none;
+}
+
+.dropdown.show .custom-dropdown::after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.custom-dropdown span {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-dropdown span::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 50%;
+    background-color: var(--primary-color);
+    transition: var(--transition);
+    transform: translateX(-50%);
+}
+
+.custom-dropdown:hover span::after {
+    width: 100%;
+}
+
+/* ================================= */
+/* 3. Botones                        */
+/* ================================= */
+
+.btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    min-width: 140px; 
+    border: none;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+}
+
+.btn i {
+    margin-right: 0.5rem;
+    font-size: 1rem;
+}
+
+.btn i,
+.btn span {
+    position: relative;
+    z-index: 1;
+}
+
+/* Botones personalizados */
+.btn.btn-primary,
+button.btn-primary,
+.custom-primary-button {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: var(--text-light) !important;
+}
+
+.btn.btn-primary:hover,
+button.btn-primary:hover {
+    background-color: #e74c4c !important;
+    border-color: #e74c4c !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    color: white !important;
+}
+
+.btn.btn-primary:focus,
+button.btn-primary:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 94, 94, 0.25) !important;
+}
+
+.btn.btn-outline-primary,
+button.btn-outline-primary {
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.btn.btn-outline-primary:hover,
+button.btn-outline-primary:hover {
+    color: white !important;
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.btn.btn-outline-primary:focus,
+button.btn-outline-primary:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 94, 94, 0.25) !important;
+}
+
+.btn.btn-outline-primary:active,
+button.btn-outline-primary:active,
+.btn.btn-outline-primary.active,
+button.btn-outline-primary.active {
+    color: white !important;
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white !important;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    color: white !important;
+}
+
+.btn-inicio-jornada,
+.btn-fin-jornada {
+    padding: 0.8rem 2rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-inicio-jornada {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+}
+
+.btn-fin-jornada {
+    background-color: var(--text-dark);
+    color: var(--text-light);
+}
+
+.btn-inicio-jornada:hover,
+.btn-fin-jornada:hover {
+    color: var(--text-light);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* ================================= */
+/* 4. Login                          */
+/* ================================= */
+.login-container {
+    background-color: var(--primary-color);
+    border-radius: 8px;
+    width: 320px;
+    max-width: 90%;
+    position: relative;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.login-title {
+    color: var(--text-light);
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.form-label {
+    color: var(--text-light);
+}
+
+.rounded-input {
+    border-radius: var(--border-radius);
+    border: none;
+    padding: 10px 15px;
+}
+
+.btn-custom {
+    border-radius: var(--border-radius);
+    padding: 8px 16px;
+    background-color: var(--text-light);
+    color: var(--primary-color);
+    border: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.btn-custom:hover {
+    transform: translateX(5px);
+    background-color: #f8f9fa;
+}
+
+/* Estilos para la tabla de horarios */
+.table-responsive {
+    margin-top: 2rem;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    border-radius: var(--border-radius);
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    background-color: var(--text-dark);
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.table td, .table th {
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(255,94,94,0.05);
+}
+
+/* Añadir al final del archivo */
+
+/* Estilos para el formulario de registro de ausencias */
+.card {
+    border: none;
+    border-radius: var(--border-radius);
+    background-color: white;
+}
+
+.card .form-label {
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+
+.input-group-text {
+    border: none;
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+.input-group .form-control {
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+}
+
+.form-control {
+    border: 1px solid #dee2e6;
+    padding: 0.75rem;
+    border-radius: var(--border-radius);
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(255, 94, 94, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.bg-light {
+    background-color: #f8f9fa !important;
+}
+
+.border {
+    border-color: #dee2e6 !important;
+}
+
+/* Animaciones para los campos */
+#campo-mismo-dia,
+#campo-periodo {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Añadir al final del archivo actual */
+
+/* Estilos para el formulario de ausencias */
+.form-bloque {
+    background-color: #111;
+    color: white;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-bloque .form-label {
+    color: white;
+    margin-bottom: 0.8rem;
+}
+
+.form-bloque .form-control {
+    border-radius: 0.5rem;
+    border: none;
+    padding: 0.75rem 1rem;
+}
+
+/* Estilos para los radio buttons */
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.radio-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
+
+.radio-option label {
+    position: relative;
+    padding-left: 2rem;
+    cursor: pointer;
+    line-height: 1.5;
+}
+
+.radio-option label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 2px solid white;
+    border-radius: 50%;
+}
+
+.radio-option input[type="radio"]:checked + label::after {
+    content: '';
+    position: absolute;
+    left: 0.35rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: white;
+    border-radius: 50%;
+}
+
+/* Botón guardar */
+.btn-guardar {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    border: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-guardar:hover {
+    background-color: #e74c4c;
+    transform: translateY(-2px);
+}
+
+.btn-guardar:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.25rem rgba(255, 94, 94, 0.25);
+}
+
+/* Estilos para la búsqueda de profesor */
+#resultados-profesor {
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+#resultados-profesor .list-group-item {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#resultados-profesor .list-group-item:hover {
+    background-color: #f8f9fa;
+    color: var(--primary-color);
+}
+
+/* Estilos para el campo de motivo */
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+
+button[type="submit"],
+.btn-danger {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    z-index: 10;
+    position: relative;
+    display: inline-flex !important;
+    align-items: center;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-danger {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    border: none !important;
+    padding: 0.6rem 1.2rem !important;
+    border-radius: var(--border-radius) !important;
+    transition: all 0.3s ease !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    min-width: 120px;
+}
+
+.btn-danger:hover {
+    background-color: #e74c4c !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn-danger:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 94, 94, 0.25) !important;
+}
+
+/* ================================= */
+/* Utilidades de color               */
+/* ================================= */
+
+.custom-primary {
+    color: var(--primary-color) !important;
+}
+
+.bg-custom-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.border-custom-primary {
+    border-color: var(--primary-color) !important;
+}
+
+.hover-custom-primary:hover {
+    color: var(--primary-color) !important;
+}
+
+.bg-hover-custom-primary:hover {
+    background-color: var(--primary-color) !important;
+}
+
