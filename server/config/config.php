@@ -1,5 +1,5 @@
 <?php
-
+// Configuración de la conexión a la base de datos
 define('SERVER', 'localhost');
 define('USER', 'root');
 define('PASSWORD', '');
