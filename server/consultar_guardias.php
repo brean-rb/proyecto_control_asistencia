@@ -31,7 +31,7 @@ try {
         while ($row = mysqli_fetch_assoc($resultado)) {
             // Determinar si la ausencia está activa en este momento
             $ausencia_activa = $row['jornada_completa'] == 1 || 
-                             ($row['hora_inicio'] <= $hora_actual && $hora_actual <= $row['hora_fin']);
+                            ($row['hora_inicio'] <= $hora_actual && $hora_actual <= $row['hora_fin']);
 
             $response['profesores_ausentes'][] = [
                 'documento' => $row['documento'],

@@ -39,13 +39,13 @@ try {
         case 'mes':
             $fecha = mysqli_real_escape_string($conexion, $_POST['fecha']);
             $sql .= " AND MONTH(a.fecha_inicio) = MONTH('$fecha') 
-                     AND YEAR(a.fecha_inicio) = YEAR('$fecha')";
+                    AND YEAR(a.fecha_inicio) = YEAR('$fecha')";
             break;
 
         case 'trimestre':
             $fecha = mysqli_real_escape_string($conexion, $_POST['fecha']);
             $sql .= " AND QUARTER(a.fecha_inicio) = QUARTER('$fecha')
-                     AND YEAR(a.fecha_inicio) = YEAR('$fecha')";
+                    AND YEAR(a.fecha_inicio) = YEAR('$fecha')";
             break;
     }
 
