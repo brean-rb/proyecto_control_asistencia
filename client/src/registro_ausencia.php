@@ -88,14 +88,16 @@ $rolUsuario = $_SESSION['rol'];
                         <h2 class="text-center fw-bold mb-4">Registro de Ausencia</h2>
                         
                         <form id="form-ausencia" action="../../server/procesar_ausencia.php" method="POST">
-                            <!-- Reemplazar la sección de búsqueda de profesor por esto -->
+                            <!-- Reemplazar la sección de búsqueda de profesor por un select -->
                             <div class="mb-4">
-                                <label for="documento" class="form-label fw-bold">DNI del profesor</label>
+                                <label for="select-docente" class="form-label fw-bold">Seleccionar docente</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-dark text-light">
-                                        <i class="fas fa-id-card"></i>
+                                        <i class="fas fa-user"></i>
                                     </span>
-                                    <input type="text" id="documento" name="documento" class="form-control" placeholder="Introduce el DNI..." required>
+                                    <select id="select-docente" name="documento" class="form-select" required>
+                                        <option value="">Selecciona un docente...</option>
+                                    </select>
                                 </div>
                             </div>
 

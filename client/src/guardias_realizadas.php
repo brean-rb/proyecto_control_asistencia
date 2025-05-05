@@ -50,7 +50,7 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor';
                         </li>
                     </ul>
                 <?php else: ?>
-                    <ul class="navbar-nav position-absolute start-50 translate-middle-x">
+                    <ul class="navbar-nav">
                         <li class="nav-item">
                             <a class="nav-link" href="consulta_guardias.php">Guardias</a>
                         </li>

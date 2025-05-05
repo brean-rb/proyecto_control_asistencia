@@ -17,7 +17,6 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor'; // por defecto 'profesor'
     <meta charset="UTF-8">
     <title>Control de Asistencia y Guardias</title>
     <link rel="icon" type="image/png" href="./img/favi.png">
-
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS (Local) -->
@@ -73,7 +72,7 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor'; // por defecto 'profesor'
                     </ul>
                 <?php else: ?>
                     <!-- Enlaces centrados para profesor -->
-                    <ul class="navbar-nav position-absolute start-50 translate-middle-x">
+                    <ul class="navbar-nav">
                         <li class="nav-item">
                             <a class="nav-link px-4" href="consulta_guardias.php">Guardias</a>
                         </li>

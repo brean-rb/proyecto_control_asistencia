@@ -133,4 +133,55 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('hora_inicio').value = horaInicio || '';
         document.getElementById('hora_fin').value = horaFin || '';
     }
+
+    // --- CARGAR DOCENTES EN EL SELECT ---
+    const selectDocente = document.getElementById('select-docente');
+    if (selectDocente) {
+        fetch('../../server/listar_docentes.php')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    data.docentes.forEach(docente => {
+                        const option = document.createElement('option');
+                        option.value = docente.document;
+                        option.textContent = docente.nombre;
+                        selectDocente.appendChild(option);
+                    });
+                }
+            });
+    }
+
+    const inputFecha = document.getElementById('fecha');
+    const horarioProfesor = document.getElementById('horario-profesor');
+
+    async function buscarHorarioDocente() {
+        const documento = selectDocente ? selectDocente.value : '';
+        const fecha = inputFecha ? inputFecha.value : '';
+        if (documento && fecha) {
+            const formData = new FormData();
+            formData.append('documento', documento);
+            formData.append('fecha', fecha);
+            try {
+                const response = await fetch('../../server/obtener_horario_profesor.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.success) {
+                    mostrarHorario(data.horario);
+                } else {
+                    horarioProfesor.innerHTML = '<p class="text-muted">No hay clases para este día</p>';
+                }
+            } catch (error) {
+                horarioProfesor.innerHTML = '<p class="text-danger">Error al buscar el horario</p>';
+            }
+        } else {
+            horarioProfesor.innerHTML = '';
+        }
+    }
+
+    if (selectDocente && inputFecha) {
+        selectDocente.addEventListener('change', buscarHorarioDocente);
+        inputFecha.addEventListener('change', buscarHorarioDocente);
+    }
 });

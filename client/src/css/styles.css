@@ -557,4 +557,23 @@ button[type="submit"],
     background-color: var(--primary-color) !important;
 }
 
+/* Autocompletado buscador docente */
+#resultados-docente {
+    max-height: 220px;
+    overflow-y: auto;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    border-radius: 0 0 8px 8px;
+    border: 1px solid #dee2e6;
+    background: #fff;
+}
+
+#resultados-docente .list-group-item {
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#resultados-docente .list-group-item:hover {
+    background: #f8f9fa;
+}
+
 
