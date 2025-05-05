@@ -12,6 +12,7 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor';
 <head>
     <meta charset="UTF-8">
     <title>Consulta de Guardias - IES Joan Coromines</title>
+    <link rel="icon" type="image/png" href="./img/favi.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../vendor/bootstrap-5.0.2-dist/css/bootstrap.min.css">
     <!-- Añadir Font Awesome -->

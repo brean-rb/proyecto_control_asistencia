@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-
+    <link rel="icon" type="image/png" href="./img/favi.png">
     <!-- Bootstrap CSS (Local) -->
     <link 
         rel="stylesheet"

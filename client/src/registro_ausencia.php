@@ -11,6 +11,7 @@ $rolUsuario = $_SESSION['rol'];
 <head>
     <meta charset="UTF-8">
     <title>Registro de Ausencia - IES Joan Coromines</title>
+    <link rel="icon" type="image/png" href="./img/favi.png">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->

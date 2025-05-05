@@ -11,6 +11,7 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor';
 <head>
     <meta charset="UTF-8">
     <title>Guardias Realizadas - IES Joan Coromines</title>
+    <link rel="icon" type="image/png" href="./img/favi.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../vendor/bootstrap-5.0.2-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -71,6 +72,7 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor';
     </nav>
 
     <div class="container py-4">
+        <h2 class="text-center fw-bold mb-4">Control de Guardias Realizadas</h2>
         <div class="row justify-content-center">
             <div class="col-md-10 mb-4">
                 <div class="card">
