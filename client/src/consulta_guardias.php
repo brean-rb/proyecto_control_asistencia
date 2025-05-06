@@ -122,5 +122,23 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor';
 
     <script src="../vendor/bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
     <script src="./js/consulta_guardias.js"></script>
+
+    <!-- Modal de Éxito para guardia reservada -->
+    <div class="modal fade success-modal" id="successModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="fas fa-check-circle success-icon"></i>
+                    <p class="success-message">Guardia reservada correctamente</p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Entendido</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

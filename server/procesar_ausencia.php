@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (mysqli_query($conexion, $sql)) {
-        header('Location: ../client/src/registro_ausencia.php');
+        header('Location: ../client/src/registro_ausencia.php?exito=1');
         exit();
     } else {
         header('Location: ../client/src/registro_ausencia.php?error=1');

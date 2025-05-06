@@ -657,4 +657,118 @@ button[type="submit"],
     content: none !important;
 }
 
+/* ================================= */
+/* Modal de Error                    */
+/* ================================= */
+.error-modal .modal-content {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.error-modal .modal-header {
+    border-bottom: none;
+    padding: 1.5rem 1.5rem 0.5rem;
+}
+
+.error-modal .modal-body {
+    padding: 1rem 1.5rem;
+    text-align: center;
+}
+
+.error-modal .modal-footer {
+    border-top: none;
+    padding: 0.5rem 1.5rem 1.5rem;
+    justify-content: center;
+}
+
+.error-icon {
+    font-size: 3.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    animation: shake 0.5s ease-in-out;
+}
+
+.error-message {
+    color: var(--text-dark);
+    font-size: 1.1rem;
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.error-modal .btn-secondary {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+}
+
+.error-modal .btn-secondary:hover {
+    background-color: #e74c4c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* ================================= */
+/* Modal de Éxito                    */
+/* ================================= */
+.success-modal .modal-content {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.success-modal .modal-header {
+    border-bottom: none;
+    padding: 1.5rem 1.5rem 0.5rem;
+}
+
+.success-modal .modal-body {
+    padding: 1rem 1.5rem;
+    text-align: center;
+}
+
+.success-modal .modal-footer {
+    border-top: none;
+    padding: 0.5rem 1.5rem 1.5rem;
+    justify-content: center;
+}
+
+.success-icon {
+    font-size: 3.5rem;
+    color: #28a745; /* Verde Bootstrap */
+    margin-bottom: 1rem;
+    animation: shake 0.5s ease-in-out;
+}
+
+.success-message {
+    color: var(--text-dark);
+    font-size: 1.1rem;
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+.success-modal .btn-success {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+}
+
+.success-modal .btn-success:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
 

@@ -38,12 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (data.success) {
-                alert('Guardia registrada correctamente');
+                mostrarModalExito();
                 btn.disabled = true;
                 btn.textContent = 'Reservada';
                 btn.classList.replace('btn-success', 'btn-secondary');
-                // Recargar la página para actualizar los datos
-                window.location.reload();
             } else {
                 alert('Error al registrar la guardia: ' + data.message);
             }
@@ -195,6 +193,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // Añadir eventos solo a los botones no deshabilitados
         document.querySelectorAll('.reservar-guardia:not([disabled])').forEach(btn => {
             btn.addEventListener('click', reservarGuardia);
+        });
+    }
+
+    // Función para mostrar el modal de éxito y recargar al cerrarse
+    function mostrarModalExito() {
+        const modal = new bootstrap.Modal(document.getElementById('successModal'));
+        modal.show();
+        document.getElementById('successModal').addEventListener('hidden.bs.modal', function handler() {
+            location.reload();
+            document.getElementById('successModal').removeEventListener('hidden.bs.modal', handler);
         });
     }
 });

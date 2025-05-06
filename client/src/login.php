@@ -56,7 +56,34 @@
         </form>
     </div>
 
+    <!-- Modal de Error -->
+    <div class="modal fade error-modal" id="errorModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <i class="fas fa-exclamation-circle error-icon"></i>
+                    <p class="error-message">Credenciales incorrectas. Por favor, inténtalo de nuevo.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Entendido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap JS (Local) -->
     <script src="../vendor/bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
+    
+    <?php if (isset($_GET['error']) && $_GET['error'] == '1'): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+            errorModal.show();
+        });
+    </script>
+    <?php endif; ?>
 </body>
 </html>

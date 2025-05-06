@@ -95,6 +95,24 @@ $rolUsuario = $_SESSION['rol'];
         </div>
     </div>
 
+    <!-- Modal de éxito moderno -->
+    <div class="modal fade success-modal" id="successModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="fas fa-check-circle success-icon"></i>
+                    <p class="success-message">Ausencia registrada correctamente</p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Entendido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Contenido principal -->
     <div class="container py-4">
         <div class="row justify-content-center">
@@ -204,5 +222,14 @@ $rolUsuario = $_SESSION['rol'];
     <!-- JS de Bootstrap -->
     <script src="../vendor/bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
     <script src="./js/registro_ausencia.js"></script>
+
+    <?php if (isset($_GET['exito']) && $_GET['exito'] == '1'): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+            successModal.show();
+        });
+    </script>
+    <?php endif; ?>
 </body>
 </html>

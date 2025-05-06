@@ -97,11 +97,11 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor'; // por defecto 'profesor'
                 <!-- Botones para inicio/fin de jornada -->
                 <div class="d-flex justify-content-center gap-4 mb-5">
                     <a href="../../server/registrar_jornada.php?accion=inicio" 
-                        class="btn btn-inicio-jornada">
+                        class="btn btn-inicio-jornada" id="btn-inicio-jornada">
                         <i class="fas fa-play me-2"></i>Inicio de jornada
                     </a>
                     <a href="../../server/registrar_jornada.php?accion=fin" 
-                        class="btn btn-fin-jornada">
+                        class="btn btn-fin-jornada" id="btn-fin-jornada">
                         <i class="fas fa-stop me-2"></i>Finalizar jornada
                     </a>
                 </div>
@@ -135,5 +135,22 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor'; // por defecto 'profesor'
     <script src="../vendor/bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
     <!-- Tu JavaScript personalizado -->
     <script src="./js/app.js"></script>
+
+    <!-- Modal de Alertas -->
+    <div class="modal fade" id="alertModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Información</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="alertModalBody">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
