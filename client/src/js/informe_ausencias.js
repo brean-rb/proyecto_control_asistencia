@@ -20,11 +20,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Escuchar cambios en el select
+    // Mostrar/ocultar campos según el tipo de informe
     tipoInforme.addEventListener('change', toggleCampos);
 
     // Ejecutar la función al cargar la página
     toggleCampos();
+
+    // --- CARGAR DOCENTES EN EL SELECT DE INFORME (igual que en consulta_asistencia.js) ---
+    if (documento && documento.tagName === 'SELECT') {
+        fetch('../../server/listar_docentes.php')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    documento.innerHTML = '<option value="">Selecciona un docente...</option>';
+                    data.docentes.forEach(docente => {
+                        const option = document.createElement('option');
+                        option.value = docente.document;
+                        option.textContent = docente.nombre;
+                        documento.appendChild(option);
+                    });
+                }
+            });
+    }
 
     formInforme.addEventListener('submit', async (e) => {
         e.preventDefault();

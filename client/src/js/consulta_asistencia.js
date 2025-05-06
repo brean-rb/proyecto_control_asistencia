@@ -5,16 +5,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const tipoFecha = document.getElementById('tipo-fecha');
     const campoFecha = document.getElementById('campo-fecha');
     const campoMes = document.getElementById('campo-mes');
-    const documento = document.getElementById('documento');
+    const selectDocente = document.getElementById('documento');
 
     // Mostrar/ocultar campo de docente según el tipo de consulta
     tipoConsulta.addEventListener('change', () => {
         if (tipoConsulta.value === 'docente') {
             campoDocente.style.display = 'block';
-            documento.required = true;
+            selectDocente.required = true;
         } else {
             campoDocente.style.display = 'none';
-            documento.required = false;
+            selectDocente.required = false;
         }
     });
 
@@ -75,6 +75,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 </td>
             `;
             tbody.appendChild(row);
+        });
+    }
+
+    // --- CARGAR DOCENTES EN EL SELECT DE CONSULTA ---
+    if (selectDocente && selectDocente.tagName === 'SELECT') {
+        fetch('../../server/listar_docentes.php')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    data.docentes.forEach(docente => {
+                        const option = document.createElement('option');
+                        option.value = docente.document;
+                        option.textContent = docente.nombre;
+                        selectDocente.appendChild(option);
+                    });
+                }
         });
     }
 });

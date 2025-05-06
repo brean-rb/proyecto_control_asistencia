@@ -21,25 +21,32 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor';
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-4">
         <div class="container">
-            <a class="navbar-brand text-dark fw-bold" href="index.php">
+            <a class="navbar-brand text-dark fw-bold flex-shrink-0" href="index.php">
                 IES Joan Coromines
             </a>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+            <button 
+                class="navbar-toggler ms-2" 
+                type="button" 
+                data-bs-toggle="collapse" 
+                data-bs-target="#navbarMain" 
+                aria-controls="navbarMain" 
+                aria-expanded="false" 
+                aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse" id="navbarMain">
-                <?php if ($rolUsuario === 'admin'): ?>
-                    <ul class="navbar-nav mx-auto">
+                <ul class="navbar-nav mx-auto align-items-center">
+                    <?php if (
+                        $rolUsuario === 'admin'
+                    ): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="consulta_guardias.php">Guardias</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="guardias_realizadas.php">Guardias realizadas</a>
+                            <a class="nav-link" href="guardias_realizadas.php">Guardias realizadas</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link" href="#" id="adminDropdown" role="button">
+                            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Administración
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="adminDropdown">
@@ -48,25 +55,20 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor';
                                 <li><a class="dropdown-item" href="informe_ausencias.php">Informe Ausencias</a></li>
                             </ul>
                         </li>
-                    </ul>
-                <?php else: ?>
-                    <ul class="navbar-nav">
+                    <?php else: ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="consulta_guardias.php">Guardias</a>
+                            <a class="nav-link px-4" href="consulta_guardias.php">Guardias</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="guardias_realizadas.php">Guardias realizadas</a>
+                            <a class="nav-link px-4" href="guardias_realizadas.php">Guardias realizadas</a>
                         </li>
-                    </ul>
-                <?php endif; ?>
-
-                <div class="ms-auto">
-                    <form action="../../server/logout.php" method="POST">
-                        <button type="submit" class="btn btn-danger">
-                            log out <i class="fas fa-sign-out-alt ms-2"></i>
-                        </button>
-                    </form>
-                </div>
+                    <?php endif; ?>
+                </ul>
+                <form action="../../server/logout.php" method="POST" class="d-flex ms-lg-auto mt-3 mt-lg-0">
+                    <button type="submit" class="btn btn-danger">
+                        log out <i class="fas fa-sign-out-alt ms-2"></i>
+                    </button>
+                </form>
             </div>
         </div>
     </nav>

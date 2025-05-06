@@ -1,5 +1,6 @@
 <?php
 session_start();
+$rolUsuario = $_SESSION['rol'] ?? 'profesor';
 if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true || $_SESSION['rol'] !== 'admin') {
     header('Location: ./login.php');
     exit();
@@ -17,40 +18,57 @@ if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true || $_S
     <link rel="stylesheet" href="./css/styles.css">
 </head>
 <body class="bg-light">
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-4">
         <div class="container">
-            <a class="navbar-brand text-dark fw-bold" href="index.php">
+            <a class="navbar-brand text-dark fw-bold flex-shrink-0" href="index.php">
                 IES Joan Coromines
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+            <button 
+                class="navbar-toggler ms-2" 
+                type="button" 
+                data-bs-toggle="collapse" 
+                data-bs-target="#navbarMain" 
+                aria-controls="navbarMain" 
+                aria-expanded="false" 
+                aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarMain">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="consulta_guardias.php">Guardias</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="guardias_realizadas.php">Guardias realizadas</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link active" href="#" id="adminDropdown" role="button">
-                            Administración
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item active" href="consulta_asistencia.php">Consulta Asistencia</a></li>
-                            <li><a class="dropdown-item" href="registro_ausencia.php">Registro Ausencia</a></li>
-                            <li><a class="dropdown-item" href="informe_ausencias.php">Informe Ausencias</a></li>
-                        </ul>
-                    </li>
+                <ul class="navbar-nav mx-auto align-items-center">
+                    <?php if (
+                        $rolUsuario === 'admin'
+                    ): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="consulta_guardias.php">Guardias</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="guardias_realizadas.php">Guardias realizadas</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Administración
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                                <li><a class="dropdown-item" href="consulta_asistencia.php">Consulta Asistencia</a></li>
+                                <li><a class="dropdown-item" href="registro_ausencia.php">Registro Ausencia</a></li>
+                                <li><a class="dropdown-item" href="informe_ausencias.php">Informe Ausencias</a></li>
+                            </ul>
+                        </li>
+                    <?php else: ?>
+                        <li class="nav-item">
+                            <a class="nav-link px-4" href="consulta_guardias.php">Guardias</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-4" href="guardias_realizadas.php">Guardias realizadas</a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
-                <div class="ms-auto">
-                    <form action="../../server/logout.php" method="POST">
-                        <button type="submit" class="btn btn-danger">
-                            log out <i class="fas fa-sign-out-alt ms-2"></i>
-                        </button>
-                    </form>
-                </div>
+                <form action="../../server/logout.php" method="POST" class="d-flex ms-lg-auto mt-3 mt-lg-0">
+                    <button type="submit" class="btn btn-danger">
+                        log out <i class="fas fa-sign-out-alt ms-2"></i>
+                    </button>
+                </form>
             </div>
         </div>
     </nav>
@@ -73,8 +91,10 @@ if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true || $_S
                                 </div>
                                 
                                 <div class="col-md-4" id="campo-docente">
-                                    <label class="form-label fw-bold">DNI Docente</label>
-                                    <input type="text" class="form-control" id="documento" name="documento">
+                                    <label class="form-label fw-bold">Docente</label>
+                                    <select class="form-select" id="documento" name="documento">
+                                        <option value="">Selecciona un docente...</option>
+                                    </select>
                                 </div>
 
                                 <div class="col-md-4">

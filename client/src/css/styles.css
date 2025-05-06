@@ -50,22 +50,6 @@ h2, h3 {
     position: relative;
 }
 
-.nav-link::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: 0;
-    left: 50%;
-    background-color: var(--primary-color);
-    transition: var(--transition);
-    transform: translateX(-50%);
-}
-
-.nav-link:hover::after {
-    width: 100%;
-}
-
 /* Estilos del dropdown */
 .dropdown:hover .dropdown-menu {
     display: block;
@@ -521,6 +505,7 @@ button[type="submit"],
     justify-content: center;
     font-weight: 500;
     min-width: 120px;
+    white-space: nowrap !important;
 }
 
 .btn-danger:hover {
@@ -574,6 +559,102 @@ button[type="submit"],
 
 #resultados-docente .list-group-item:hover {
     background: #f8f9fa;
+}
+
+/* Centrado en escritorio, alineado a la izquierda en móvil */
+.nav-profesor {
+    justify-content: center !important;
+    width: 100%;
+}
+
+@media (max-width: 991.98px) { /* Bootstrap breakpoint para menú hamburguesa */
+    .navbar-nav {
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+        text-align: left !important;
+        width: 100%;
+    }
+    .navbar-nav .nav-item {
+        width: 100%;
+    }
+    .navbar-nav .nav-link {
+        width: 100%;
+        text-align: left !important;
+    }
+    .logout-mobile-separator {
+        padding-bottom: 2rem;
+    }
+}
+
+.logout-align {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+@media (max-width: 991.98px) {
+    .logout-align {
+        justify-content: center;
+        width: 100%;
+    }
+}
+
+/* Eliminar menú centrado absoluto en navbar solo escritorio */
+.navbar-center-menu {
+    display: none !important;
+}
+
+.navbar-nav {
+    align-items: center;
+}
+
+@media (min-width: 992px) {
+    .navbar-nav {
+        flex-direction: row;
+        justify-content: center;
+        width: 100%;
+    }
+    .navbar .btn-danger {
+        margin-left: 2rem;
+    }
+}
+
+/* Eliminar completamente custom-dropdown y sus pseudo-elementos */
+.custom-dropdown,
+.custom-dropdown::after,
+.custom-dropdown span,
+.custom-dropdown span::after {
+    display: none !important;
+}
+
+/* Subrayado animado en hover para enlaces del navbar */
+.navbar-nav .nav-link {
+    position: relative;
+    overflow: hidden;
+}
+
+.navbar-nav .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background-color: #e74c4c;
+    transition: width 0.3s;
+}
+
+.navbar-nav .nav-link:hover::after,
+.navbar-nav .nav-link.active::after {
+    width: 100%;
+}
+
+/* Asegurar que la flecha de los dropdowns no aparezca */
+.navbar-nav .dropdown-toggle::after,
+.custom-dropdown::after {
+    display: none !important;
+    content: none !important;
 }
 
 
