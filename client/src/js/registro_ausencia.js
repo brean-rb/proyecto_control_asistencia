@@ -1,8 +1,13 @@
+// Este archivo controla la página de registro de ausencias de docentes.
+// Permite registrar una ausencia para un día o un periodo, seleccionar horas concretas y ver el horario del profesor.
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Referencias a los campos del formulario para mostrar/ocultar según el tipo de ausencia
     const campoMismoDia = document.getElementById('campo-mismo-dia');
     const campoPeriodo = document.getElementById('campo-periodo');
     const tipoRadios = document.querySelectorAll('input[name="tipo"]');
 
+    // Esta función muestra los campos correctos según si la ausencia es de un día o de varios días
     function toggleCampos() {
         const tipo = document.querySelector('input[name="tipo"]:checked').value;
 
@@ -21,10 +26,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Cuando se cambia el tipo de ausencia, actualiza los campos visibles
     tipoRadios.forEach(radio => radio.addEventListener('change', toggleCampos));
     toggleCampos();
 
-    // Evento para cuando se selecciona una fecha
+    // Evento para cuando se selecciona una fecha: busca el horario del profesor para ese día
     document.getElementById('fecha').addEventListener('change', async function () {
         const documento = document.getElementById('documento').value;
         const fecha = this.value;
@@ -53,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Esta función muestra el horario del profesor en una tabla y permite seleccionar horas concretas
     function mostrarHorario(horario) {
         const contenedor = document.getElementById('horario-profesor');
         contenedor.innerHTML = '';
@@ -83,10 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
             tr.innerHTML = `
                 <td>
                     <input class="form-check-input" type="checkbox" 
-                           name="horas_seleccionadas[]" 
-                           value="${clase.hora_inicio}-${clase.hora_fin}"
-                           data-inicio="${clase.hora_inicio}"
-                           data-fin="${clase.hora_fin}">
+                            name="horas_seleccionadas[]" 
+                            value="${clase.hora_inicio}-${clase.hora_fin}"
+                            data-inicio="${clase.hora_inicio}"
+                            data-fin="${clase.hora_fin}">
                 </td>
                 <td>${clase.hora_inicio} - ${clase.hora_fin}</td>
                 <td>${clase.asignatura || 'No disponible'}</td>
@@ -98,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tabla.appendChild(tbody);
         contenedor.appendChild(tabla);
 
+        // Inputs ocultos para guardar la primera y última hora seleccionada
         const inputHoraInicio = document.createElement('input');
         inputHoraInicio.type = 'hidden';
         inputHoraInicio.name = 'hora_inicio';
@@ -111,12 +119,14 @@ document.addEventListener('DOMContentLoaded', () => {
         contenedor.appendChild(inputHoraInicio);
         contenedor.appendChild(inputHoraFin);
 
+        // Cuando se seleccionan/desmarcan horas, actualiza los valores de inicio y fin
         const checkboxes = contenedor.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
             checkbox.addEventListener('change', actualizarHoras);
         });
     }
 
+    // Esta función calcula la primera y última hora seleccionada y las guarda en los inputs ocultos
     function actualizarHoras() {
         const checkboxes = document.querySelectorAll('input[name="horas_seleccionadas[]"]:checked');
         let horaInicio = null;
@@ -151,9 +161,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
+    // Referencias para buscar el horario al cambiar docente o fecha
     const inputFecha = document.getElementById('fecha');
     const horarioProfesor = document.getElementById('horario-profesor');
 
+    // Esta función busca el horario del docente seleccionado para la fecha elegida
     async function buscarHorarioDocente() {
         const documento = selectDocente ? selectDocente.value : '';
         const fecha = inputFecha ? inputFecha.value : '';
@@ -180,6 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Cuando se cambia el docente o la fecha, busca el horario automáticamente
     if (selectDocente && inputFecha) {
         selectDocente.addEventListener('change', buscarHorarioDocente);
         inputFecha.addEventListener('change', buscarHorarioDocente);

@@ -1,7 +1,11 @@
 <?php
+// Este archivo devuelve el horario de un profesor para un día concreto.
+// Se usa para mostrar las clases del profesor en el registro de ausencias y otros formularios.
+
 session_start();
 require_once __DIR__ . '/config/config.php';
 
+// Solo permite el acceso a usuarios autenticados
 if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true) {
     header('Content-Type: application/json');
     echo json_encode(['success' => false, 'message' => 'No autorizado']);
@@ -14,6 +18,7 @@ try {
     $documento = $_POST['documento'];
     $fecha = $_POST['fecha'];
 
+    // Mapea el número de día de la semana a la letra usada en la base de datos
     $dia_mapping = [
         '1' => 'L',
         '2' => 'M',
@@ -25,6 +30,7 @@ try {
     $dia_numero = date('N', strtotime($fecha));
     $dia_letra = $dia_mapping[$dia_numero];
 
+    // Consulta para obtener el horario del profesor en ese día
     $sql = "SELECT h.hora_desde, h.hora_fins, h.grup, h.contingut, h.aula, 
             COALESCE(c.nom_val, h.contingut) as nombre_asignatura 
             FROM horari_grup h
@@ -56,6 +62,7 @@ try {
     $response['message'] = 'Error: ' . $e->getMessage();
 }
 
+// Devuelve la respuesta en formato JSON
 header('Content-Type: application/json');
 echo json_encode($response);
 exit();

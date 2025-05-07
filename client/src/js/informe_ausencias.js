@@ -1,4 +1,8 @@
+// Este archivo controla la página de informe de ausencias.
+// Permite generar un informe de ausencias por docente o por fecha y muestra los resultados en una tabla.
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Referencias a los elementos del formulario y campos de filtro
     const formInforme = document.getElementById('form-informe');
     const tipoInforme = document.getElementById('tipo-informe');
     const campoDocente = document.getElementById('campo-docente');
@@ -6,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const documento = document.getElementById('documento');
     const fecha = document.getElementById('fecha');
 
+    // Esta función muestra u oculta los campos según el tipo de informe seleccionado
     function toggleCampos() {
         if (tipoInforme.value === 'docente') {
             campoDocente.style.display = 'block';
@@ -23,10 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mostrar/ocultar campos según el tipo de informe
     tipoInforme.addEventListener('change', toggleCampos);
 
-    // Ejecutar la función al cargar la página
+    // Ejecutar la función al cargar la página para mostrar los campos correctos
     toggleCampos();
 
     // --- CARGAR DOCENTES EN EL SELECT DE INFORME (igual que en consulta_asistencia.js) ---
+    // Al cargar la página, pide la lista de docentes al servidor y los añade al desplegable
     if (documento && documento.tagName === 'SELECT') {
         fetch('../../server/listar_docentes.php')
             .then(res => res.json())
@@ -43,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
+    // Cuando se envía el formulario, pide los datos del informe al servidor y muestra los resultados
     formInforme.addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -66,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Esta función muestra en la tabla los resultados del informe de ausencias
     function mostrarResultados(ausencias) {
         const tbody = document.querySelector('#tabla-ausencias tbody');
         tbody.innerHTML = '';

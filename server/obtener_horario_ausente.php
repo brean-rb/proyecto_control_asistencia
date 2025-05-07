@@ -1,4 +1,7 @@
 <?php
+// Este archivo devuelve el horario de un profesor ausente para el día de hoy.
+// Se usa para mostrar las clases que necesitan guardia y si ya están reservadas.
+
 session_start();
 require_once __DIR__ . '/config/config.php';
 
@@ -9,12 +12,13 @@ try {
     $fecha = date('Y-m-d');
     $dia_letra = ['', 'L', 'M', 'X', 'J', 'V'][date('N')];
 
+    // Consulta para obtener las clases del profesor ausente en el día de hoy
     $sql = "SELECT h.hora_desde, h.hora_fins, h.grup, h.contingut, h.aula,
-                   COALESCE(c.nom_val, h.contingut) as nombre_asignatura,
-                   rg.docente_guardia,
-                   a.jornada_completa,
-                   a.hora_inicio as ausencia_inicio,
-                   a.hora_fin as ausencia_fin
+                    COALESCE(c.nom_val, h.contingut) as nombre_asignatura,
+                    rg.docente_guardia,
+                    a.jornada_completa,
+                    a.hora_inicio as ausencia_inicio,
+                    a.hora_fin as ausencia_fin
             FROM horari_grup h
             LEFT JOIN continguts c ON h.contingut = c.codi 
                 AND h.ensenyament = c.ensenyament
@@ -56,6 +60,7 @@ try {
     $response['message'] = 'Error: ' . $e->getMessage();
 }
 
+// Devuelve la respuesta en formato JSON
 header('Content-Type: application/json');
 echo json_encode($response);
 exit();

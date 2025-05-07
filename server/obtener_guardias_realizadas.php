@@ -1,4 +1,7 @@
 <?php
+// Este archivo devuelve la lista de guardias realizadas por el profesor que ha iniciado sesión.
+// Permite filtrar por fecha y hora, y devuelve los resultados en formato JSON para mostrarlos en la tabla.
+
 session_start();
 require_once __DIR__ . '/config/config.php';
 
@@ -12,10 +15,12 @@ if (!isset($_SESSION['dni'])) {
 $response = ['success' => false, 'message' => '', 'guardias' => []];
 
 try {
+    // Recoge los filtros de fecha y hora enviados por GET
     $fecha = $_GET['fecha'] ?? date('Y-m-d');
     $hora = $_GET['hora'] ?? null;
     $dni_profesor = $_SESSION['dni'];
 
+    // Consulta para obtener las guardias realizadas por el profesor
     $sql = "SELECT 
                 g.id,
                 g.fecha,
@@ -43,6 +48,7 @@ try {
         $sql .= " AND TIME(g.hora_inicio) = '$hora'";
     }
 
+    // Ordena los resultados por fecha y hora
     $sql .= " ORDER BY g.fecha DESC, g.hora_inicio ASC";
 
     $resultado = mysqli_query($conexion, $sql);
@@ -66,7 +72,7 @@ try {
         $response['success'] = true;
     }
 
-    // Debug: Agregar información adicional
+    // Debug: Agregar información adicional (puedes quitar esto en producción)
     $response['debug'] = [
         'dni_profesor' => $dni_profesor,
         'fecha_busqueda' => $fecha,
@@ -79,6 +85,7 @@ try {
     $response['message'] = 'Error: ' . $e->getMessage();
 }
 
+// Devuelve la respuesta en formato JSON
 header('Content-Type: application/json');
 echo json_encode($response);
 exit(); 

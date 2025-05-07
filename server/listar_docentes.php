@@ -1,8 +1,12 @@
 <?php
+// Este archivo devuelve la lista de todos los docentes para los desplegables del sistema.
+// Se usa para cargar los nombres de los profesores en los formularios.
+
 require_once __DIR__ . '/config/config.php';
 header('Content-Type: application/json');
 
 $resultado = ['success' => false, 'docentes' => []];
+// Consulta para obtener el documento y el nombre completo de cada docente
 $sql = "SELECT document, CONCAT(nom, ' ', cognom1, ' ', cognom2) AS nombre FROM docent ORDER BY nom, cognom1, cognom2";
 $res = mysqli_query($conexion, $sql);
 if ($res) {
@@ -14,4 +18,5 @@ if ($res) {
     }
     $resultado['success'] = true;
 }
+// Devuelve la lista de docentes en formato JSON
 echo json_encode($resultado); 

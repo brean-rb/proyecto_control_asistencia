@@ -1,4 +1,7 @@
 <?php
+// Este archivo devuelve la lista de profesores ausentes hoy y sus datos, para la gestión de guardias.
+// Se usa en la página de consulta y reserva de guardias.
+
 session_start();
 require_once __DIR__ . '/config/config.php';
 
@@ -51,6 +54,7 @@ try {
     $response['message'] = 'Error: ' . $e->getMessage();
 }
 
+// Devuelve la respuesta en formato JSON
 header('Content-Type: application/json');
 echo json_encode($response);
 exit();

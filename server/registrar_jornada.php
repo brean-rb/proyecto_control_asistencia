@@ -1,4 +1,7 @@
 <?php
+// Este archivo gestiona el inicio y fin de la jornada laboral de un profesor.
+// Permite registrar el inicio y fin de la jornada, tanto por petición normal como por AJAX (JSON).
+
 session_start();
 require_once __DIR__.'/config/config.php';
 
@@ -23,7 +26,7 @@ if ($_GET['format'] === 'json') {
     header('Content-Type: application/json');
     
     if ($accion === 'inicio') {
-        // 1) Comprobar si ya hay un registro pendiente
+        // 1) Comprobar si ya hay un registro pendiente (sin hora de salida)
         $sqlCheck = "SELECT id FROM registro_jornada 
                         WHERE documento = '$dni' 
                         AND fecha = '$fecha' 
@@ -37,7 +40,7 @@ if ($_GET['format'] === 'json') {
             exit();
         }
 
-        // 2) Insertar nuevo inicio
+        // 2) Insertar nuevo inicio de jornada
         $sqlInsert = "INSERT INTO registro_jornada (documento, fecha, hora_entrada, hora_salida) 
                         VALUES ('$dni', '$fecha', '$hora', '00:00:00')";
         
@@ -49,7 +52,7 @@ if ($_GET['format'] === 'json') {
         exit();
 
     } elseif ($accion === 'fin') {
-        // Actualizar hora_salida
+        // Actualizar la hora de salida de la jornada abierta
         $sqlUpdate = "UPDATE registro_jornada 
                         SET hora_salida = '$hora' 
                         WHERE documento = '$dni' 
@@ -75,7 +78,7 @@ if ($_GET['format'] === 'json') {
 
 // Si no es formato JSON, mantener el comportamiento original de redirección
 if ($accion === 'inicio') {
-    // 1) Comprobar si ya hay un registro pendiente
+    // 1) Comprobar si ya hay un registro pendiente (sin hora de salida)
     $sqlCheck = "SELECT id FROM registro_jornada 
                     WHERE documento = '$dni' 
                     AND fecha = '$fecha' 
@@ -89,7 +92,7 @@ if ($accion === 'inicio') {
         exit();
     }
 
-    // 2) Insertar nuevo inicio
+    // 2) Insertar nuevo inicio de jornada
     $sqlInsert = "INSERT INTO registro_jornada (documento, fecha, hora_entrada, hora_salida) 
                     VALUES ('$dni', '$fecha', '$hora', '00:00:00')";
     
@@ -98,7 +101,7 @@ if ($accion === 'inicio') {
     exit();
 
 } elseif ($accion === 'fin') {
-    // Actualizar hora_salida
+    // Actualizar la hora de salida de la jornada abierta
     $sqlUpdate = "UPDATE registro_jornada 
                     SET hora_salida = '$hora' 
                     WHERE documento = '$dni' 

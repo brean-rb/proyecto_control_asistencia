@@ -1,6 +1,11 @@
+// Este archivo controla la página de consulta y reserva de guardias.
+// Aquí se muestran los profesores ausentes, sus horarios y permite reservar guardias de forma sencilla.
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Al cargar la página, muestra la lista de profesores ausentes
     cargarProfesoresAusentes();
 
+    // Pide al servidor la lista de profesores ausentes y la muestra en la tabla
     async function cargarProfesoresAusentes() {
         try {
             const response = await fetch('../../server/consultar_guardias.php');
@@ -17,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Cuando se pulsa el botón de reservar guardia, envía los datos al servidor para registrar la reserva
     async function reservarGuardia(e) {
         const btn = e.target;
         const formData = new FormData();
@@ -51,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Muestra la tabla de guardias pendientes para hoy
     function mostrarGuardias(guardias) {
         const tbody = document.querySelector('#tabla-guardias tbody');
         tbody.innerHTML = '';
@@ -85,11 +92,13 @@ document.addEventListener('DOMContentLoaded', () => {
             tbody.appendChild(row);
         });
 
+        // Añade el evento a todos los botones de reservar guardia
         document.querySelectorAll('.reservar-guardia').forEach(button => {
             button.addEventListener('click', reservarGuardia);
         });
     }
 
+    // Muestra la tabla de profesores ausentes y el botón para ver su horario
     function mostrarProfesoresAusentes(profesores) {
         const tbody = document.querySelector('#tabla-profesores-ausentes tbody');
         tbody.innerHTML = '';
@@ -118,12 +127,13 @@ document.addEventListener('DOMContentLoaded', () => {
             tbody.appendChild(row);
         });
 
-        // Añadir eventos a los botones
+        // Añadir eventos a los botones para ver el horario del profesor ausente
         document.querySelectorAll('.ver-horario').forEach(btn => {
             btn.addEventListener('click', mostrarHorarioProfesor);
         });
     }
 
+    // Cuando se pulsa "Ver Horario", pide al servidor el horario del profesor ausente y lo muestra
     async function mostrarHorarioProfesor(e) {
         const documento = e.target.dataset.documento;
         const formData = new FormData();
@@ -148,6 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Muestra la tabla con las clases del profesor ausente y permite reservar guardia en cada una
     function mostrarHorario(horario, docente_ausente) {
         const tbody = document.querySelector('#tabla-horario tbody');
         tbody.innerHTML = '';

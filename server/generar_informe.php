@@ -1,7 +1,11 @@
 <?php
+// Este archivo genera un informe de ausencias según los filtros elegidos (docente, día, semana, mes o trimestre).
+// Devuelve los resultados en formato JSON para mostrarlos en la tabla del informe.
+
 session_start();
 require_once __DIR__ . '/config/config.php';
 
+// Solo permite el acceso a usuarios autenticados y con rol de admin
 if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true || $_SESSION['rol'] !== 'admin') {
     header('Content-Type: application/json');
     echo json_encode(['success' => false, 'message' => 'No autorizado']);
@@ -11,13 +15,16 @@ if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true || $_S
 $response = ['success' => false, 'message' => '', 'ausencias' => []];
 
 try {
+    // Recoge el tipo de informe y los filtros enviados desde el formulario
     $tipo_informe = $_POST['tipo_informe'];
     
+    // Consulta base para buscar ausencias y el nombre del docente
     $sql = "SELECT a.*, CONCAT(d.nom, ' ', d.cognom1, ' ', d.cognom2) as nombre 
             FROM ausencias a 
             LEFT JOIN docent d ON a.documento = d.document 
             WHERE 1=1";
 
+    // Según el tipo de informe, añade el filtro correspondiente
     switch ($tipo_informe) {
         case 'docente':
             if (!empty($_POST['documento'])) {
@@ -49,12 +56,14 @@ try {
             break;
     }
 
+    // Ordena los resultados por fecha de inicio de la ausencia
     $sql .= " ORDER BY a.fecha_inicio DESC";
 
     $resultado = mysqli_query($conexion, $sql);
     
     if ($resultado) {
         $ausencias = [];
+        // Recorre los resultados y los guarda en un array
         while ($row = mysqli_fetch_assoc($resultado)) {
             $ausencias[] = [
                 'nombre' => $row['nombre'],
@@ -74,6 +83,7 @@ try {
     $response['message'] = 'Error: ' . $e->getMessage();
 }
 
+// Devuelve la respuesta en formato JSON
 header('Content-Type: application/json');
 echo json_encode($response);
 exit();

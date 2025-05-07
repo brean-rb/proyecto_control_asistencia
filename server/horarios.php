@@ -1,17 +1,21 @@
 <?php
+// Este archivo devuelve el horario del profesor que ha iniciado sesión.
+// Se usa para mostrar el horario en la página principal del sistema.
+
 session_start();
 require_once __DIR__ . '/config/config.php';
 
-// Verificar autenticación
+// Verifica que el usuario esté autenticado
 if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true) {
     header('Content-Type: application/json');
     echo json_encode(['error' => 'No autenticado']);
     exit();
 }
 
-// Obtener DNI del profesor
+// Obtiene el DNI del profesor desde la sesión
 $dni = mysqli_real_escape_string($conexion, $_SESSION['dni']);
 
+// Consulta para obtener el horario del profesor
 $sql = "SELECT 
             hg.dia_setmana,
             hg.hora_desde,
@@ -27,16 +31,19 @@ $sql = "SELECT
 $result = mysqli_query($conexion, $sql);
 
 if (!$result) {
+    // Si hay un error en la consulta, lo devuelve en formato JSON
     header('Content-Type: application/json');
     echo json_encode(['error' => 'Error en la consulta: ' . mysqli_error($conexion)]);
     exit();
 }
 
 $horarios = [];
+// Recorre los resultados y los guarda en un array
 while ($row = mysqli_fetch_assoc($result)) {
     $horarios[] = $row;
 }
 
+// Devuelve el horario en formato JSON
 header('Content-Type: application/json');
 echo json_encode($horarios);
 exit();

@@ -1,4 +1,8 @@
+// Este archivo controla la página de consulta de asistencias.
+// Aquí se gestiona el formulario para buscar asistencias por docente, día o mes, y se muestran los resultados.
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Referencias a los elementos del formulario y campos de filtro
     const formConsulta = document.getElementById('form-consulta');
     const tipoConsulta = document.getElementById('tipo-consulta');
     const campoDocente = document.getElementById('campo-docente');
@@ -7,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const campoMes = document.getElementById('campo-mes');
     const selectDocente = document.getElementById('documento');
 
-    // Mostrar/ocultar campo de docente según el tipo de consulta
+    // Cuando se cambia el tipo de consulta, muestra u oculta el campo de docente
     tipoConsulta.addEventListener('change', () => {
         if (tipoConsulta.value === 'docente') {
             campoDocente.style.display = 'block';
@@ -18,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Mostrar/ocultar campos de fecha según el tipo
+    // Cuando se cambia el tipo de fecha, muestra el campo de día o de mes según la opción
     tipoFecha.addEventListener('change', () => {
         if (tipoFecha.value === 'dia') {
             campoFecha.style.display = 'block';
@@ -33,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Manejar envío del formulario
+    // Cuando se envía el formulario, pide los datos de asistencia al servidor y muestra los resultados
     formConsulta.addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -57,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Esta función muestra en la tabla los resultados de la consulta de asistencias
     function mostrarResultados(asistencias) {
         const tbody = document.querySelector('#tabla-asistencias tbody');
         tbody.innerHTML = '';
@@ -79,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- CARGAR DOCENTES EN EL SELECT DE CONSULTA ---
+    // Al cargar la página, pide la lista de docentes al servidor y los añade al desplegable
     if (selectDocente && selectDocente.tagName === 'SELECT') {
         fetch('../../server/listar_docentes.php')
             .then(res => res.json())

@@ -771,4 +771,13 @@ button[type="submit"],
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
+.tr-dia-hoy {
+    background: linear-gradient(90deg, #ffeaea 80%, #fff 100%);
+    border-left: 5px solid #e74c4c;
+    box-shadow: 0 2px 12px rgba(231, 76, 76, 0.07);
+    font-weight: 500;
+    color: #e74c4c;
+    transition: background 0.3s, box-shadow 0.3s;
+}
+
 
