@@ -37,13 +37,18 @@
 
             <div class="mb-3">
                 <label for="password" class="form-label text-white">PASSWORD:</label>
-                <input 
-                    type="password" 
-                    class="form-control rounded-input" 
-                    id="password" 
-                    name="password" 
-                    placeholder="password"
-                    required>
+                <div class="input-group rounded-input-group">
+                    <input 
+                        type="password" 
+                        class="form-control rounded-input" 
+                        id="password" 
+                        name="password" 
+                        placeholder="password"
+                        required>
+                    <span class="input-group-text bg-white border-start-0 rounded-input" style="cursor:pointer;" id="togglePassword">
+                        <i class="fa fa-eye" id="icon-eye"></i>
+                    </span>
+                </div>
             </div>
 
             <div class="d-flex justify-content-end">
@@ -76,6 +81,22 @@
 
     <!-- Bootstrap JS (Local) -->
     <script src="../vendor/bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordInput = document.getElementById('password');
+            const icon = document.getElementById('icon-eye');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+    </script>
     
     <?php if (isset($_GET['error']) && $_GET['error'] == '1'): ?>
     <script>

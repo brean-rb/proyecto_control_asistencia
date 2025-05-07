@@ -28,8 +28,8 @@ $sql = "SELECT u.*, d.nom, d.cognom1, d.cognom2
 $result = mysqli_query($conexion, $sql);
 
 if ($row = mysqli_fetch_assoc($result)) {
-    // Verificar que la contraseña sea correcta
-    if ($row && $row['password'] === $password) {
+    // Verificar que la contraseña sea correcta usando password_verify
+    if ($row && password_verify($password, $row['password'])) {
         $_SESSION['dni'] = trim($row['documento']);
         $_SESSION['rol'] = $row['rol'];
         $_SESSION['nombre_completo'] = trim($row['nom'] . ' ' . $row['cognom1'] . ' ' . $row['cognom2']);

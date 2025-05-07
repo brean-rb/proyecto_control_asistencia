@@ -780,4 +780,21 @@ button[type="submit"],
     transition: background 0.3s, box-shadow 0.3s;
 }
 
+/* Borde redondeado uniforme para el input-group del password en login */
+.input-group.rounded-input-group {
+    border: none;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    background: #fff;
+}
+.input-group.rounded-input-group .form-control,
+.input-group.rounded-input-group .input-group-text {
+    border: none !important;
+    border-radius: 0 !important;
+    background: transparent;
+}
+.input-group.rounded-input-group .form-control:focus {
+    box-shadow: none;
+}
+
 
