@@ -9,6 +9,7 @@ Este proyecto ha sido desarrollado como parte del módulo de **Proyecto del Cicl
 - **PHP** 7.4 o superior  
 - **MySQL / MariaDB**  
 - **XAMPP** (recomendado para pruebas locales)  
+- **Python 3.8+** (para scripts de gestión de usuarios)  
 - Navegador moderno (Chrome, Firefox, Edge...)
 
 ---
@@ -40,7 +41,7 @@ O hazlo manualmente moviendo la carpeta al directorio `htdocs`.
    gestion_guardias_asistencias
    ```
 
-3. Importa el archivo SQL que encontrarás en el proyecto (`database/guardias.sql`) para generar todas las tablas necesarias.
+3. Importa el archivo SQL que encontrarás en el proyecto (`database/gestion_guardias_asistencias.sql` o `database/guardias.sql`) para generar todas las tablas necesarias.
 
 ---
 
@@ -53,24 +54,38 @@ Puedes usar los siguientes usuarios para iniciar sesión:
 | 11111111A   | secret     | admin     |
 | 22222222B   | secret     | profesor  |
 
-También puedes iniciar sesión con cualquier DNI de profesor que exista en la tabla `profesores`, usando siempre la contraseña `secret`.
+También puedes iniciar sesión con cualquier DNI de profesor que exista en la tabla `profesores` o `docent`, usando siempre la contraseña `secret`.
 
 > **Nota**: Todos los profesores importados tendrán el rol de 'profesor' por defecto.
 
 ---
 
-## 🧩 Añadir automáticamente docentes como usuarios
+## 🧩 Gestión de usuarios y contraseñas seguras
+
+### Contraseñas hasheadas
+
+Las contraseñas de los usuarios se almacenan de forma segura usando hash bcrypt.  
+Para actualizar todas las contraseñas existentes a formato seguro, utiliza el script Python:
+
+```bash
+cd server
+python actualizar_passwords.py
+```
+
+Este script solo hasheará contraseñas que no estén ya encriptadas.
+
+### Añadir automáticamente docentes como usuarios
 
 > ⚠️ **IMPORTANTE**: Este paso solo es necesario si utilizas la base de datos `guardias.sql`. Si estás usando `gestion_guardias_asistencias.sql`, los usuarios ya están creados automáticamente.
 
-Usa esta consulta SQL para insertar todos los docentes en la tabla `usuarios` como profesores:
+Puedes usar el script Python para insertar todos los docentes en la tabla `usuarios` como profesores (con contraseña segura):
 
-```sql
-INSERT INTO usuarios (documento, password, rol)
-SELECT p.dni, 'secret', 'profesor'
-FROM profesores p
-WHERE p.dni NOT IN (SELECT u.documento FROM usuarios u);
+```bash
+cd server
+python insertar_docentes_como_usuarios.py
 ```
+
+Esto añadirá todos los docentes que no estén ya en la tabla `usuarios`, con contraseña `secret` (hasheada) y rol `profesor`.
 
 ---
 
@@ -109,7 +124,8 @@ Inicia sesión con cualquiera de los usuarios de prueba.
 
 ### 👥 Login y logout
 
-- Inicio de sesión con DNI y contraseña.  
+- Inicio de sesión con DNI y contraseña (con opción de mostrar/ocultar contraseña).
+- Contraseñas seguras (bcrypt).
 - Registro de entradas y salidas en archivo `.txt`.
 
 ### ⏱ Registro de jornada
@@ -136,26 +152,24 @@ Visible solo para usuarios con rol **admin**:
 ## 📂 Estructura del proyecto
 
 ```
-control_asistencia_y_gestion_guardias/
+proyecto_control_asistencia/
 ├── client/
-│   └── src/
-│       ├── css/
-│       │   └── styles.css
-│       ├── js/
-│       │   ├── login.js
-│       │   ├── consulta_guardias.js
-│       │   ├── registro_ausencia.js
-│       │   ├── consulta_asistencia.js
-│       │   └── informe_ausencias.js
-│       ├── login.php
-│       ├── index.php
-│       ├── consulta_guardias.php
-│       ├── consulta_asistencia.php
-│       ├── registro_ausencia.php
-│       └── informe_ausencias.php
+│   ├── src/
+│   │   ├── css/
+│   │   ├── js/
+│   │   ├── login.php
+│   │   ├── index.php
+│   │   ├── consulta_guardias.php
+│   │   ├── consulta_asistencia.php
+│   │   ├── registro_ausencia.php
+│   │   └── informe_ausencias.php
+│   └── vendor/
 ├── server/
 │   ├── config/
 │   │   └── config.php
+│   ├── script/
+│   │   ├── actualizar_passwords.py
+│   │   └── insertar_docentes_como_usuarios.py
 │   ├── consultar_asistencia.php
 │   ├── consultar_guardias.php
 │   ├── generar_informe.php
@@ -165,7 +179,9 @@ control_asistencia_y_gestion_guardias/
 │   ├── procesar_ausencia.php
 │   ├── registrar_guardia.php
 │   ├── registrar_jornada.php
-│   └── registro_sesion.txt
+│   ├── registro_sesion.txt
+│   ├── listar_docentes.php
+│   ├── logout.php
 ├── database/
 │   ├── gestion_guardias_asistencias.sql
 │   └── guardias.sql
@@ -181,6 +197,7 @@ control_asistencia_y_gestion_guardias/
 - **JavaScript**  
 - **PHP** (sin frameworks)  
 - **MySQL**  
+- **Python 3**  
 - **XAMPP**
 
 ---

@@ -26,6 +26,10 @@ try:
 
         for usuario in usuarios:
             user_id, documento, password = usuario
+            # Comprobar si la contraseña ya está hasheada (bcrypt)
+            if password.startswith('$2a$') or password.startswith('$2b$') or password.startswith('$2y$'):
+                print(f"Usuario {documento} ya tiene la contraseña hasheada. Saltando...")
+                continue
             # Generar hash seguro con bcrypt
             hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
             try:
