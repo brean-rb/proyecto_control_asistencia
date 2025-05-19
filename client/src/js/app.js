@@ -14,6 +14,29 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        // Configurar fetch para incluir el token de autenticación
+        CONFIG.fetch = async function(url, options = {}) {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No hay token de autenticación');
+            }
+
+            const defaultOptions = {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            const response = await fetch(url, { ...defaultOptions, ...options });
+            
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+
+            return response;
+        };
+
         // Actualizar el nombre de usuario solo en la página principal
         if (window.location.pathname.endsWith('index.php')) {
             const userNameElement = document.getElementById('userName');
