@@ -2,12 +2,21 @@
 // Este archivo devuelve la lista de profesores ausentes hoy y sus datos, para la gestión de guardias.
 // Se usa en la página de consulta y reserva de guardias.
 
-session_start();
 require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/verify_token.php';
 
+header('Content-Type: application/json');
 $response = ['success' => false, 'message' => '', 'profesores_ausentes' => []];
 
 try {
+    // Verificar el token
+    $tokenData = verificarToken();
+    
+    // Verificar que el usuario tenga permisos para consultar guardias
+    if ($tokenData['rol'] !== 'admin' && $tokenData['rol'] !== 'profesor') {
+        throw new Exception('No tienes permisos para consultar guardias');
+    }
+
     $fecha = date('Y-m-d'); // Fecha actual
     $hora_actual = date('H:i:s');
     $dia_semana = date('N'); // 1 (lunes) a 7 (domingo)
@@ -55,6 +64,5 @@ try {
 }
 
 // Devuelve la respuesta en formato JSON
-header('Content-Type: application/json');
 echo json_encode($response);
 exit();

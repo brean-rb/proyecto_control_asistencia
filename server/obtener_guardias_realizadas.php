@@ -2,23 +2,20 @@
 // Este archivo devuelve la lista de guardias realizadas por el profesor que ha iniciado sesión.
 // Permite filtrar por fecha y hora, y devuelve los resultados en formato JSON para mostrarlos en la tabla.
 
-session_start();
 require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/verify_token.php';
 
-// Verificar que el usuario está autenticado
-if (!isset($_SESSION['dni'])) {
-    header('Content-Type: application/json');
-    echo json_encode(['success' => false, 'message' => 'No hay sesión iniciada']);
-    exit();
-}
-
+header('Content-Type: application/json');
 $response = ['success' => false, 'message' => '', 'guardias' => []];
 
 try {
+    // Verificar el token
+    $tokenData = verificarToken();
+    
     // Recoge los filtros de fecha y hora enviados por GET
     $fecha = $_GET['fecha'] ?? date('Y-m-d');
     $hora = $_GET['hora'] ?? null;
-    $dni_profesor = $_SESSION['dni'];
+    $dni_profesor = $tokenData['id'];
 
     // Consulta para obtener las guardias realizadas por el profesor
     $sql = "SELECT 
@@ -86,6 +83,5 @@ try {
 }
 
 // Devuelve la respuesta en formato JSON
-header('Content-Type: application/json');
 echo json_encode($response);
 exit(); 

@@ -2,98 +2,122 @@
 // Permite filtrar por fecha y hora, y muestra los resultados en una tabla.
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Referencias al formulario de filtro y a la tabla donde se muestran las guardias
-    const formFiltro = document.getElementById('filtroGuardias');
-    const tablaGuardias = document.getElementById('tablaGuardias').getElementsByTagName('tbody')[0];
+    const form = document.getElementById('formGuardiasRealizadas');
+    const btnGuardar = document.getElementById('btnGuardar');
+    const btnCancelar = document.getElementById('btnCancelar');
+    const fechaInput = document.getElementById('fecha');
+    const horaInicioInput = document.getElementById('hora_inicio');
+    const horaFinInput = document.getElementById('hora_fin');
+    const observacionesInput = document.getElementById('observaciones');
 
-    // Cargar guardias al cargar la página
-    cargarGuardias();
+    // Establecer la fecha actual como valor predeterminado
+    const hoy = new Date();
+    fechaInput.value = hoy.toISOString().split('T')[0];
 
-    // Cuando se envía el formulario, recarga la tabla con los nuevos filtros
-    formFiltro.addEventListener('submit', function(e) {
-        e.preventDefault();
-        cargarGuardias();
-    });
+    // Función para mostrar alertas
+    function mostrarAlerta(mensaje, tipo = 'error') {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${tipo} alert-dismissible fade show`;
+        alertDiv.innerHTML = `
+            ${mensaje}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        form.insertBefore(alertDiv, form.firstChild);
+    }
 
-    // Esta función pide al servidor las guardias realizadas según los filtros y las muestra en la tabla
-    function cargarGuardias() {
-        const fecha = document.getElementById('fecha').value;
-        const hora = document.getElementById('hora').value;
+    // Función para validar el formulario
+    function validarFormulario() {
+        const fecha = new Date(fechaInput.value);
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
 
-        // Construir la URL con los parámetros
-        let url = `../../server/obtener_guardias_realizadas.php?fecha=${fecha}`;
-        if (hora) {
-            url += `&hora=${hora}`;
+        if (fecha < hoy) {
+            mostrarAlerta('No se pueden registrar guardias para fechas pasadas');
+            return false;
         }
 
-        // Limpiar la tabla
-        tablaGuardias.innerHTML = '';
+        if (horaInicioInput.value >= horaFinInput.value) {
+            mostrarAlerta('La hora de inicio debe ser anterior a la hora de fin');
+            return false;
+        }
 
-        // Mostrar mensaje de carga mientras llegan los datos
-        const loadingRow = document.createElement('tr');
-        loadingRow.innerHTML = `
-            <td colspan="8" class="text-center">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Cargando...</span>
-                </div>
-            </td>
-        `;
-        tablaGuardias.appendChild(loadingRow);
+        return true;
+    }
 
-        // Realizar la petición al servidor
-        fetch(url)
+    // Función para obtener las guardias disponibles
+    function obtenerGuardiasDisponibles() {
+        const fecha = fechaInput.value;
+        
+        return fetch(`${CONFIG.API_URL}?accion=${CONFIG.ACCIONES.GUARDIAS}&fecha=${fecha}`)
             .then(response => response.json())
             .then(data => {
-                tablaGuardias.innerHTML = '';
-
-                if (data.success) {
-                    if (data.guardias.length === 0) {
-                        // Si no hay datos, muestra un mensaje
-                        const noDataRow = document.createElement('tr');
-                        noDataRow.innerHTML = `
-                            <td colspan="8" class="text-center">
-                                No se encontraron guardias para los criterios seleccionados
-                            </td>
-                        `;
-                        tablaGuardias.appendChild(noDataRow);
-                    } else {
-                        // Si hay datos, los muestra en la tabla
-                        data.guardias.forEach(guardia => {
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-                                <td>${guardia.fecha}</td>
-                                <td>${guardia.hora}</td>
-                                <td>${guardia.hora_fin}</td>
-                                <td>${guardia.profesor_ausente}</td>
-                                <td>${guardia.profesor_guardia}</td>
-                                <td>${guardia.asignatura}</td>
-                                <td>${guardia.grupo}</td>
-                                <td>${guardia.aula}</td>
-                            `;
-                            tablaGuardias.appendChild(row);
-                        });
-                    }
-                } else {
-                    // Si hay un error, muestra el mensaje de error
-                    const errorRow = document.createElement('tr');
-                    errorRow.innerHTML = `
-                        <td colspan="8" class="text-center text-danger">
-                            Error: ${data.message}
-                        </td>
-                    `;
-                    tablaGuardias.appendChild(errorRow);
+                if (!data.success) {
+                    throw new Error(data.message || CONFIG.MENSAJES.ERROR_SERVIDOR);
                 }
-            })
-            .catch(error => {
-                // Si ocurre un error en la petición, muestra un mensaje de error
-                tablaGuardias.innerHTML = '';
-                const errorRow = document.createElement('tr');
-                errorRow.innerHTML = `
-                    <td colspan="8" class="text-center text-danger">
-                        Error al cargar los datos: ${error.message}
-                    </td>
-                `;
-                tablaGuardias.appendChild(errorRow);
+                return data.guardias;
             });
     }
+
+    // Función para registrar la guardia realizada
+    function registrarGuardia(datos) {
+        return fetch(`${CONFIG.API_URL}?accion=${CONFIG.ACCIONES.GUARDIAS_REALIZADAS}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(datos)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                throw new Error(data.message || CONFIG.MENSAJES.ERROR_SERVIDOR);
+            }
+            return data;
+        });
+    }
+
+    // Evento submit del formulario
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        if (!validarFormulario()) {
+            return;
+        }
+
+        btnGuardar.disabled = true;
+        btnGuardar.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Guardando...';
+
+        try {
+            // Obtener las guardias disponibles
+            const guardias = await obtenerGuardiasDisponibles();
+
+            // Preparar los datos para el registro
+            const datos = {
+                fecha: fechaInput.value,
+                hora_inicio: horaInicioInput.value,
+                hora_fin: horaFinInput.value,
+                observaciones: observacionesInput.value,
+                guardias: guardias
+            };
+
+            // Registrar la guardia
+            const resultado = await registrarGuardia(datos);
+            
+            mostrarAlerta(resultado.message, 'success');
+            form.reset();
+            fechaInput.value = new Date().toISOString().split('T')[0];
+
+        } catch (error) {
+            console.error('Error:', error);
+            mostrarAlerta(error.message || CONFIG.MENSAJES.ERROR_CONEXION);
+        } finally {
+            btnGuardar.disabled = false;
+            btnGuardar.innerHTML = 'Guardar';
+        }
+    });
+
+    // Evento click del botón cancelar
+    btnCancelar.addEventListener('click', function() {
+        window.location.href = 'index.php';
+    });
 }); 

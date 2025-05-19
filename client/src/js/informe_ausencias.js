@@ -1,97 +1,116 @@
 // Este archivo controla la página de informe de ausencias.
 // Permite generar un informe de ausencias por docente o por fecha y muestra los resultados en una tabla.
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Referencias a los elementos del formulario y campos de filtro
-    const formInforme = document.getElementById('form-informe');
-    const tipoInforme = document.getElementById('tipo-informe');
-    const campoDocente = document.getElementById('campo-docente');
-    const campoFecha = document.getElementById('campo-fecha');
-    const documento = document.getElementById('documento');
-    const fecha = document.getElementById('fecha');
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('formInformeAusencias');
+    const btnGenerar = document.getElementById('btnGenerar');
+    const btnCancelar = document.getElementById('btnCancelar');
+    const fechaInicioInput = document.getElementById('fecha_inicio');
+    const fechaFinInput = document.getElementById('fecha_fin');
 
-    // Esta función muestra u oculta los campos según el tipo de informe seleccionado
-    function toggleCampos() {
-        if (tipoInforme.value === 'docente') {
-            campoDocente.style.display = 'block';
-            campoFecha.style.display = 'none';
-            documento.required = true;
-            fecha.required = false;
-        } else {
-            campoDocente.style.display = 'none';
-            campoFecha.style.display = 'block';
-            documento.required = false;
-            fecha.required = true;
+    // Establecer fechas predeterminadas (último mes)
+    const hoy = new Date();
+    const mesAnterior = new Date(hoy.getFullYear(), hoy.getMonth() - 1, 1);
+    fechaInicioInput.value = mesAnterior.toISOString().split('T')[0];
+    fechaFinInput.value = hoy.toISOString().split('T')[0];
+
+    // Función para mostrar alertas
+    function mostrarAlerta(mensaje, tipo = 'error') {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${tipo} alert-dismissible fade show`;
+        alertDiv.innerHTML = `
+            ${mensaje}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        form.insertBefore(alertDiv, form.firstChild);
+    }
+
+    // Función para validar el formulario
+    function validarFormulario() {
+        const fechaInicio = new Date(fechaInicioInput.value);
+        const fechaFin = new Date(fechaFinInput.value);
+
+        if (fechaInicio > fechaFin) {
+            mostrarAlerta('La fecha de inicio debe ser anterior a la fecha de fin');
+            return false;
         }
+
+        return true;
     }
 
-    // Mostrar/ocultar campos según el tipo de informe
-    tipoInforme.addEventListener('change', toggleCampos);
-
-    // Ejecutar la función al cargar la página para mostrar los campos correctos
-    toggleCampos();
-
-    // --- CARGAR DOCENTES EN EL SELECT DE INFORME (igual que en consulta_asistencia.js) ---
-    // Al cargar la página, pide la lista de docentes al servidor y los añade al desplegable
-    if (documento && documento.tagName === 'SELECT') {
-        fetch('../../server/listar_docentes.php')
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    documento.innerHTML = '<option value="">Selecciona un docente...</option>';
-                    data.docentes.forEach(docente => {
-                        const option = document.createElement('option');
-                        option.value = docente.document;
-                        option.textContent = docente.nombre;
-                        documento.appendChild(option);
-                    });
-                }
-            });
+    // Función para generar el informe
+    function generarInforme(datos) {
+        return fetch(`${CONFIG.API_URL}?accion=${CONFIG.ACCIONES.INFORME}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(datos)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                throw new Error(data.message || CONFIG.MENSAJES.ERROR_SERVIDOR);
+            }
+            return data;
+        });
     }
 
-    // Cuando se envía el formulario, pide los datos del informe al servidor y muestra los resultados
-    formInforme.addEventListener('submit', async (e) => {
+    // Evento submit del formulario
+    form.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        const formData = new FormData(formInforme);
+        if (!validarFormulario()) {
+            return;
+        }
+
+        btnGenerar.disabled = true;
+        btnGenerar.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generando...';
+
         try {
-            const response = await fetch('../../server/generar_informe.php', {
-                method: 'POST',
-                body: formData
-            });
+            // Preparar los datos para el informe
+            const datos = {
+                fecha_inicio: fechaInicioInput.value,
+                fecha_fin: fechaFinInput.value
+            };
+
+            // Generar el informe
+            const resultado = await generarInforme(datos);
             
-            const data = await response.json();
-            
-            if (data.success) {
-                mostrarResultados(data.ausencias);
-            } else {
-                alert('Error al generar el informe: ' + data.message);
-            }
+            // Mostrar el informe en una nueva ventana
+            const ventanaInforme = window.open('', '_blank');
+            ventanaInforme.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Informe de Ausencias</title>
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+                    <style>
+                        body { padding: 20px; }
+                        .table { margin-top: 20px; }
+                    </style>
+                </head>
+                <body>
+                    <h1>Informe de Ausencias</h1>
+                    <p>Período: ${fechaInicioInput.value} al ${fechaFinInput.value}</p>
+                    ${resultado.html}
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+                </body>
+                </html>
+            `);
+            ventanaInforme.document.close();
+
         } catch (error) {
             console.error('Error:', error);
-            alert('Error al generar el informe');
+            mostrarAlerta(error.message || CONFIG.MENSAJES.ERROR_CONEXION);
+        } finally {
+            btnGenerar.disabled = false;
+            btnGenerar.innerHTML = 'Generar Informe';
         }
     });
 
-    // Esta función muestra en la tabla los resultados del informe de ausencias
-    function mostrarResultados(ausencias) {
-        const tbody = document.querySelector('#tabla-ausencias tbody');
-        tbody.innerHTML = '';
-
-        ausencias.forEach(ausencia => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${ausencia.nombre}</td>
-                <td>${ausencia.fecha_inicio}</td>
-                <td>${ausencia.fecha_fin}</td>
-                <td>${ausencia.motivo}</td>
-                <td>
-                    <span class="badge ${ausencia.justificada ? 'bg-success' : 'bg-danger'}">
-                        ${ausencia.justificada ? 'Sí' : 'No'}
-                    </span>
-                </td>
-            `;
-            tbody.appendChild(row);
-        });
-    }
+    // Evento click del botón cancelar
+    btnCancelar.addEventListener('click', function() {
+        window.location.href = 'index.php';
+    });
 });

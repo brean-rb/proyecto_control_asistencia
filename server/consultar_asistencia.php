@@ -2,19 +2,21 @@
 // Este archivo recibe la petición para consultar asistencias desde el panel de administración.
 // Permite buscar asistencias por docente, día o mes y devuelve los resultados en formato JSON.
 
-session_start();
 require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/verify_token.php';
 
-// Solo permite el acceso a usuarios autenticados y con rol de admin
-if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true || $_SESSION['rol'] !== 'admin') {
-    header('Content-Type: application/json');
-    echo json_encode(['success' => false, 'message' => 'No autorizado']);
-    exit();
-}
-
+header('Content-Type: application/json');
 $response = ['success' => false, 'message' => '', 'asistencias' => []];
 
 try {
+    // Verificar el token
+    $tokenData = verificarToken();
+    
+    // Verificar que el usuario tenga rol de administrador
+    if ($tokenData['rol'] !== 'admin') {
+        throw new Exception('No tienes permisos para consultar asistencias');
+    }
+
     // Recoge los filtros enviados desde el formulario
     $tipo_consulta = $_POST['tipo_consulta'];
     $tipo_fecha = $_POST['tipo_fecha'];
@@ -68,6 +70,5 @@ try {
 }
 
 // Devuelve la respuesta en formato JSON
-header('Content-Type: application/json');
 echo json_encode($response);
 exit();

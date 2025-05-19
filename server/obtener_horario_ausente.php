@@ -2,12 +2,21 @@
 // Este archivo devuelve el horario de un profesor ausente para el día de hoy.
 // Se usa para mostrar las clases que necesitan guardia y si ya están reservadas.
 
-session_start();
 require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/verify_token.php';
 
+header('Content-Type: application/json');
 $response = ['success' => false, 'message' => '', 'horario' => []];
 
 try {
+    // Verificar el token
+    $tokenData = verificarToken();
+    
+    // Verificar que el usuario tenga permisos para ver horarios de ausentes
+    if ($tokenData['rol'] !== 'admin' && $tokenData['rol'] !== 'profesor') {
+        throw new Exception('No tienes permisos para ver horarios de ausentes');
+    }
+
     $documento = $_POST['documento'];
     $fecha = date('Y-m-d');
     $dia_letra = ['', 'L', 'M', 'X', 'J', 'V'][date('N')];
@@ -61,6 +70,5 @@ try {
 }
 
 // Devuelve la respuesta en formato JSON
-header('Content-Type: application/json');
 echo json_encode($response);
 exit();

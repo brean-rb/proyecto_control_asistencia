@@ -56,7 +56,7 @@ try {
         $response['success'] = true;
         $response['horario'] = $horario;
     } else {
-        throw new Exception(mysqli_error($conexion));
+        $response['message'] = 'Error en la consulta: ' . mysqli_error($conexion);
     }
 } catch (Exception $e) {
     $response['message'] = 'Error: ' . $e->getMessage();

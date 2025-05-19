@@ -1,21 +1,14 @@
-<?php
-session_start();
-if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true || $_SESSION['rol'] !== 'admin') {
-    header('Location: ./login.php');
-    exit();
-}
-$rolUsuario = $_SESSION['rol'];
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Registro de Ausencia - IES Joan Coromines</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Ausencias - Control de Asistencia</title>
     <link rel="icon" type="image/png" href="./img/favi.png">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="../vendor/bootstrap-5.0.2-dist/css/bootstrap.min.css">
+    <!-- Bootstrap CSS (CDN) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- CSS -->
@@ -28,47 +21,29 @@ $rolUsuario = $_SESSION['rol'];
             <a class="navbar-brand text-dark fw-bold flex-shrink-0" href="index.php">
                 IES Joan Coromines
             </a>
-            <button 
-                class="navbar-toggler ms-2" 
-                type="button" 
-                data-bs-toggle="collapse" 
-                data-bs-target="#navbarMain" 
-                aria-controls="navbarMain" 
-                aria-expanded="false" 
-                aria-label="Toggle navigation">
+            <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarMain">
                 <ul class="navbar-nav mx-auto align-items-center">
-                    <?php if (
-                        $rolUsuario === 'admin'
-                    ): ?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="consulta_guardias.php">Guardias</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="guardias_realizadas.php">Guardias realizadas</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Administración
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                                <li><a class="dropdown-item" href="consulta_asistencia.php">Consulta Asistencia</a></li>
-                                <li><a class="dropdown-item" href="registro_ausencia.php">Registro Ausencia</a></li>
-                                <li><a class="dropdown-item" href="informe_ausencias.php">Informe Ausencias</a></li>
-                            </ul>
-                        </li>
-                    <?php else: ?>
-                        <li class="nav-item">
-                            <a class="nav-link px-4" href="consulta_guardias.php">Guardias</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link px-4" href="guardias_realizadas.php">Guardias realizadas</a>
-                        </li>
-                    <?php endif; ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="consulta_guardias.php">Guardias</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="guardias_realizadas.php">Guardias realizadas</a>
+                    </li>
+                    <li class="nav-item dropdown admin-only" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Administración
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                            <li><a class="dropdown-item" href="consulta_asistencia.php">Asistencias</a></li>
+                            <li><a class="dropdown-item" href="registro_ausencia.php">Registro ausencia</a></li>
+                            <li><a class="dropdown-item" href="informe_ausencias.php">Informe ausencia</a></li>
+                        </ul>
+                    </li>
                 </ul>
-                <form action="../../server/logout.php" method="POST" class="d-flex ms-lg-auto mt-3 mt-lg-0">
+                <form id="logoutForm" class="d-flex ms-lg-auto mt-3 mt-lg-0">
                     <button type="submit" class="btn btn-danger">
                         log out <i class="fas fa-sign-out-alt ms-2"></i>
                     </button>
@@ -121,7 +96,7 @@ $rolUsuario = $_SESSION['rol'];
                     <div class="card-body p-4">
                         <h2 class="text-center fw-bold mb-4">Registro de Ausencia</h2>
                         
-                        <form id="form-ausencia" action="../../server/procesar_ausencia.php" method="POST">
+                        <form id="form-ausencia">
                             <!-- Reemplazar la sección de búsqueda de profesor por un select -->
                             <div class="mb-4">
                                 <label for="select-docente" class="form-label fw-bold">Seleccionar docente</label>
@@ -203,10 +178,10 @@ $rolUsuario = $_SESSION['rol'];
                                 </div>
                             </div>
 
-                            <!-- Reemplazar la sección de los botones -->
-                            <div class="d-flex justify-content-center gap-3 mt-4">
+                            <!-- Botones -->
+                            <div class="d-flex justify-content-center gap-3">
                                 <button type="submit" class="btn btn-danger">
-                                    <i class="fas fa-save me-2"></i>guardar
+                                    <i class="fas fa-save me-2"></i>Registrar Ausencia
                                 </button>
                                 <a href="index.php" class="btn btn-secondary">
                                     <i class="fas fa-times me-2"></i>Cancelar
@@ -219,17 +194,16 @@ $rolUsuario = $_SESSION['rol'];
         </div>
     </div>
 
-    <!-- JS de Bootstrap -->
-    <script src="../vendor/bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/common.js"></script>
     <script src="./js/registro_ausencia.js"></script>
-
-    <?php if (isset($_GET['exito']) && $_GET['exito'] == '1'): ?>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var successModal = new bootstrap.Modal(document.getElementById('successModal'));
-            successModal.show();
-        });
+      document.addEventListener('DOMContentLoaded', function() {
+        if (typeof CONFIG !== 'undefined' && CONFIG.handleNavVisibility) {
+          CONFIG.handleNavVisibility();
+        }
+      });
     </script>
-    <?php endif; ?>
 </body>
 </html>

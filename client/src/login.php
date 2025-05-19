@@ -2,18 +2,17 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Control de Asistencia</title>
     <link rel="icon" type="image/png" href="./img/favi.png">
-    <!-- Bootstrap CSS (Local) -->
-    <link 
-        rel="stylesheet"
-        href="../vendor/bootstrap-5.0.2-dist/css/bootstrap.min.css">
-    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS (CDN) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Tu CSS personalizado -->
-    <link rel="stylesheet" href="css/styles.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="./css/styles.css">
 </head>
 <body class="bg-light d-flex justify-content-center align-items-center" style="min-height: 100vh;">
 
@@ -23,7 +22,7 @@
         <h1 class="login-title mb-4">login</h1>
 
         <!-- Formulario de login -->
-        <form action="../../server/login.php" method="POST">
+        <form id="loginForm" method="POST">
             <div class="mb-3">
                 <label for="dni" class="form-label text-white">DNI:</label>
                 <input 
@@ -79,24 +78,11 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS (Local) -->
-    <script src="../vendor/bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        document.getElementById('togglePassword').addEventListener('click', function () {
-            const passwordInput = document.getElementById('password');
-            const icon = document.getElementById('icon-eye');
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        });
-    </script>
+    <!-- JS de Bootstrap (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Tu JavaScript personalizado -->
+    <script src="./js/config.js"></script>
+    <script src="./js/login.js"></script>
     
     <?php if (isset($_GET['error']) && $_GET['error'] == '1'): ?>
     <script>

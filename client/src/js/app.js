@@ -2,99 +2,168 @@
 // Aquí se gestionan los botones de inicio/fin de jornada y la carga del horario del profesor.
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM cargado');
-    
-    // Evita que el menú de administración recargue la página al hacer clic
-    document.querySelector('#adminDropdown')?.addEventListener('click', function(e) {
-        e.preventDefault();
-    });
+    // Verificar si el usuario está autenticado
+    if (!CONFIG.isAuthenticated()) {
+        window.location.href = 'login.php';
+        return;
+    }
 
-    // Mejora la experiencia en pantallas táctiles para el menú de administración
-    if('ontouchstart' in document.documentElement) {
-        document.querySelector('#adminDropdown')?.addEventListener('click', function() {
-            this.parentElement.classList.toggle('show');
-            document.querySelector('.dropdown-menu').classList.toggle('show');
+    // Obtener elementos del DOM
+    const btnInicio = document.getElementById('btnInicio');
+    const btnFin = document.getElementById('btnFin');
+    const userName = document.getElementById('userName');
+    const logoutForm = document.getElementById('logoutForm');
+    const alertContainer = document.getElementById('alertContainer');
+
+    // Mostrar el nombre del usuario y manejar visibilidad del nav
+    const user = CONFIG.getUser();
+    if (user) {
+        userName.textContent = user.nombre_completo || user.dni;
+        CONFIG.handleNavVisibility();
+        
+        // Mostrar/ocultar elementos según el rol
+        const adminElements = document.querySelectorAll('.admin-only');
+        adminElements.forEach(element => {
+            element.style.display = user.rol === 'admin' ? 'block' : 'none';
         });
     }
 
-    // Muestra una ventana emergente con un mensaje
-    function mostrarAlerta(mensaje) {
-        const modal = new bootstrap.Modal(document.getElementById('alertModal'));
-        document.getElementById('alertModalBody').innerHTML = mensaje;
-        modal.show();
+    // Función para mostrar alertas
+    function mostrarAlerta(mensaje, tipo = 'error') {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${tipo === 'error' ? 'danger' : 'success'} alert-dismissible fade show`;
+        alertDiv.innerHTML = `
+            ${mensaje}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        alertContainer.appendChild(alertDiv);
+        
+        // Auto-cerrar después de 5 segundos
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 5000);
     }
 
-    // Busca los botones de inicio y fin de jornada en la página
-    const btnInicio = document.getElementById('btn-inicio-jornada');
-    const btnFin = document.getElementById('btn-fin-jornada');
-    
-    console.log('Botones encontrados:', { btnInicio, btnFin });
+    // Función para verificar el estado actual de la jornada
+    async function verificarEstadoJornada() {
+        try {
+            const response = await CONFIG.fetch(`${CONFIG.API_URL}?accion=${CONFIG.ACCIONES.ESTADO_JORNADA}`);
+            const data = await response.json();
+            
+            if (data.success) {
+                // Actualizar estado de los botones según la respuesta
+                if (data.jornada_iniciada) {
+                    btnInicio.disabled = true;
+                    btnInicio.classList.add('disabled');
+                    btnFin.disabled = false;
+                    btnFin.classList.remove('disabled');
+                } else {
+                    btnInicio.disabled = false;
+                    btnInicio.classList.remove('disabled');
+                    btnFin.disabled = true;
+                    btnFin.classList.add('disabled');
+                }
+            }
+        } catch (error) {
+            console.error('Error al verificar estado:', error);
+            mostrarAlerta(CONFIG.MENSAJES.ERROR_CONEXION);
+        }
+    }
+
+    // Verificar estado inicial
+    verificarEstadoJornada();
 
     // Cuando se pulsa el botón de inicio de jornada
     if (btnInicio) {
-        btnInicio.addEventListener('click', function(e) {
+        btnInicio.addEventListener('click', async function(e) {
             e.preventDefault();
-            console.log('Click en inicio jornada');
-            // Llama al servidor para registrar el inicio de la jornada
-            fetch('../../server/registrar_jornada.php?accion=inicio&format=json')
-                .then(res => res.json())
-                .then(data => {
-                    mostrarAlerta(data.mensaje);
-                    if (data.success) {
-                        setTimeout(() => location.reload(), 1500);
-                    }
-                })
-                .catch(() => mostrarAlerta('Error al iniciar la jornada'));
-        });
-    }
-    // Cuando se pulsa el botón de fin de jornada
-    if (btnFin) {
-        btnFin.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Click en fin jornada');
-            // Llama al servidor para registrar el fin de la jornada
-            fetch('../../server/registrar_jornada.php?accion=fin&format=json')
-                .then(res => res.json())
-                .then(data => {
-                    mostrarAlerta(data.mensaje);
-                    if (data.success) {
-                        setTimeout(() => location.reload(), 1500);
-                    }
-                })
-                .catch(() => mostrarAlerta('Error al finalizar la jornada'));
+            if (btnInicio.disabled) {
+                mostrarAlerta('Ya hay una jornada iniciada');
+                return;
+            }
+
+            try {
+                const response = await CONFIG.fetch(`${CONFIG.API_URL}?accion=${CONFIG.ACCIONES.INICIO_JORNADA}`);
+                const data = await response.json();
+                
+                mostrarAlerta(data.mensaje, data.success ? 'success' : 'error');
+                if (data.success) {
+                    verificarEstadoJornada();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarAlerta(CONFIG.MENSAJES.ERROR_CONEXION);
+            }
         });
     }
 
-    // Carga el horario del profesor al entrar en la página
+    // Cuando se pulsa el botón de fin de jornada
+    if (btnFin) {
+        btnFin.addEventListener('click', async function(e) {
+            e.preventDefault();
+            if (btnFin.disabled) {
+                mostrarAlerta('No hay ninguna jornada iniciada');
+                return;
+            }
+
+            try {
+                const response = await CONFIG.fetch(`${CONFIG.API_URL}?accion=${CONFIG.ACCIONES.FIN_JORNADA}`);
+                const data = await response.json();
+                
+                mostrarAlerta(data.mensaje, data.success ? 'success' : 'error');
+                if (data.success) {
+                    verificarEstadoJornada();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarAlerta(CONFIG.MENSAJES.ERROR_CONEXION);
+            }
+        });
+    }
+
+    // Manejar el logout
+    if (logoutForm) {
+        logoutForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            try {
+                const response = await CONFIG.fetch(`${CONFIG.API_URL}?accion=${CONFIG.ACCIONES.LOGOUT}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Limpiar el localStorage
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    
+                    // Redirigir al login
+                    window.location.href = 'login.php';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarAlerta(CONFIG.MENSAJES.ERROR_CONEXION);
+            }
+        });
+    }
+
+    // Cargar el horario del profesor
     cargarHorario();
 });
 
 // Esta función pide al servidor el horario del profesor y lo muestra en la tabla
-function cargarHorario() {
-    fetch('../../server/horarios.php')
-        .then(response => {
-            console.log('Estado de la respuesta:', response.status);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.text().then(text => {
-                console.log('Respuesta recibida:', text);
-                try {
-                    return JSON.parse(text);
-                } catch (e) {
-                    console.error('Error al parsear JSON:', e);
-                    throw new Error('La respuesta no es un JSON válido');
-                }
-            });
-        })
-        .then(data => {
-            console.log('Datos recibidos:', data); // Verifica que aquí se imprimen los datos
+async function cargarHorario() {
+    try {
+        const response = await CONFIG.fetch(`${CONFIG.API_URL}?accion=${CONFIG.ACCIONES.HORARIOS}`);
+        const data = await response.json();
+        
+        if (data.success) {
             const tbody = document.getElementById('tablaHorario');
             tbody.innerHTML = '';
 
-            // Si no hay datos, muestra un mensaje
-            if (!data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="text-center">No hay horario disponible</td></tr>';
+            if (data.horario.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center">No hay horario disponible</td>
+                    </tr>`;
                 return;
             }
 
@@ -107,32 +176,29 @@ function cargarHorario() {
                 'V': 'Viernes'
             };
 
-            // Calcula qué día es hoy para resaltarlo en la tabla
-            const hoy = new Date();
-            const diaActual = hoy.getDay(); // 1=Lunes, 2=Martes, 3=Miércoles, 4=Jueves, 5=Viernes
-            const mapDia = {1: 'L', 2: 'M', 3: 'X', 4: 'J', 5: 'V'};
-
-            // Recorre cada clase del horario y la añade a la tabla
-            data.forEach(horario => {
-                const esHoy = horario.dia_setmana === mapDia[diaActual];
+            data.horario.forEach(clase => {
                 const tr = document.createElement('tr');
-                if (esHoy) tr.classList.add('tr-dia-hoy'); // Resalta si es hoy
                 tr.innerHTML = `
-                    <td>${diasSemana[horario.dia_setmana] || horario.dia_setmana}</td>
-                    <td>${horario.hora_desde}</td>
-                    <td>${horario.hora_fins}</td>
-                    <td>${horario.asignatura || 'No disponible'}</td>
-                    <td>${horario.grupo || 'No disponible'}</td>
-                    <td>${horario.aula || 'No disponible'}</td>
+                    <td>${diasSemana[clase.dia_setmana] || clase.dia_setmana}</td>
+                    <td>${clase.hora_desde}</td>
+                    <td>${clase.hora_fins}</td>
+                    <td>${clase.asignatura || 'No disponible'}</td>
+                    <td>${clase.grupo}</td>
+                    <td>${clase.aula}</td>
                 `;
                 tbody.appendChild(tr);
             });
-        })
-        .catch(error => {
-            console.error('Error al procesar el horario:', error);
-            const tbody = document.getElementById('tablaHorario');
-            tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">
-                Error al cargar el horario: ${error.message}
-            </td></tr>`;
-        });
+        } else {
+            throw new Error(data.message || CONFIG.MENSAJES.ERROR_SERVIDOR);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        const tbody = document.getElementById('tablaHorario');
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="6" class="text-center text-danger">
+                    Error al cargar el horario: ${error.message}
+                </td>
+            </tr>`;
+    }
 }

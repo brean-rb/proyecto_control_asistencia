@@ -1,85 +1,45 @@
-<?php
-session_start();
-
-// Verificar si el usuario está autenticado
-if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true) {
-    header('Location: ./login.php');  // Cambiado de login.html a login.php
-    exit();
-}
-
-// Tomamos el rol de la sesión para decidir qué mostrar
-$rolUsuario = $_SESSION['rol'] ?? 'profesor'; // por defecto 'profesor'
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Control de Asistencia y Guardias</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Asistencia</title>
     <link rel="icon" type="image/png" href="./img/favi.png">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Bootstrap CSS (Local) -->
-    <link rel="stylesheet" href="../vendor/bootstrap-5.0.2-dist/css/bootstrap.min.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- CSS -->
-    <link rel="stylesheet" href="./css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="./css/styles.css" rel="stylesheet">
 </head>
 <body class="bg-light">
-
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-4">
         <div class="container">
-            <!-- Logo / Nombre del centro -->
             <a class="navbar-brand text-dark fw-bold flex-shrink-0" href="index.php">
                 IES Joan Coromines
             </a>
-
-            <!-- Botón hamburguesa -->
-            <button 
-                class="navbar-toggler ms-2" 
-                type="button" 
-                data-bs-toggle="collapse" 
-                data-bs-target="#navbarMain" 
-                aria-controls="navbarMain" 
-                aria-expanded="false" 
-                aria-label="Toggle navigation">
+            <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
-            <!-- Menú colapsable (opciones + logout) -->
             <div class="collapse navbar-collapse" id="navbarMain">
                 <ul class="navbar-nav mx-auto align-items-center">
-                    <?php if (
-                        $rolUsuario === 'admin'
-                    ): ?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="consulta_guardias.php">Guardias</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="guardias_realizadas.php">Guardias realizadas</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Administración
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                                <li><a class="dropdown-item" href="consulta_asistencia.php">Consulta Asistencia</a></li>
-                                <li><a class="dropdown-item" href="registro_ausencia.php">Registro Ausencia</a></li>
-                                <li><a class="dropdown-item" href="informe_ausencias.php">Informe Ausencias</a></li>
-                            </ul>
-                        </li>
-                    <?php else: ?>
-                        <li class="nav-item">
-                            <a class="nav-link px-4" href="consulta_guardias.php">Guardias</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link px-4" href="guardias_realizadas.php">Guardias realizadas</a>
-                        </li>
-                    <?php endif; ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="consulta_guardias.php">Guardias</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="guardias_realizadas.php">Guardias realizadas</a>
+                    </li>
+                    <li class="nav-item dropdown admin-only" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Administración
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                            <li><a class="dropdown-item" href="consulta_asistencia.php">Asistencias</a></li>
+                            <li><a class="dropdown-item" href="registro_ausencia.php">Registro ausencia</a></li>
+                            <li><a class="dropdown-item" href="informe_ausencias.php">Informe ausencia</a></li>
+                        </ul>
+                    </li>
                 </ul>
-                <form action="../../server/logout.php" method="POST" class="d-flex ms-lg-auto mt-3 mt-lg-0">
+                <form id="logoutForm" class="d-flex ms-lg-auto mt-3 mt-lg-0">
                     <button type="submit" class="btn btn-danger">
                         log out <i class="fas fa-sign-out-alt ms-2"></i>
                     </button>
@@ -89,30 +49,28 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor'; // por defecto 'profesor'
     </nav>
 
     <!-- Contenido principal -->
-    <div class="container py-4"> <!-- Añadido padding vertical -->
+    <div class="container py-4">
         <div class="row justify-content-center">
-            <div class="col-lg-8"> <!-- Contenido más centrado -->
-                <h2 class="text-center mb-4">Bienvenido, <?php echo htmlspecialchars($_SESSION['nombre_completo'] ?? $_SESSION['dni']); ?></h2>
+            <div class="col-lg-8">
+                <div id="alertContainer"></div>
+                <h2 class="text-center mb-4">Bienvenido, <span id="userName"></span></h2>
                 
                 <!-- Botones para inicio/fin de jornada -->
-                <div class="d-flex justify-content-center gap-4 mb-5">
-                    <a href="../../server/registrar_jornada.php?accion=inicio" 
-                        class="btn btn-inicio-jornada" id="btn-inicio-jornada">
-                        <i class="fas fa-play me-2"></i>Inicio de jornada
-                    </a>
-                    <a href="../../server/registrar_jornada.php?accion=fin" 
-                        class="btn btn-fin-jornada" id="btn-fin-jornada">
-                        <i class="fas fa-stop me-2"></i>Finalizar jornada
-                    </a>
+                <div class="d-flex justify-content-center gap-3 mb-4">
+                    <button id="btnInicio" class="btn btn-inicio-jornada">
+                        <i class="fas fa-play me-2"></i>
+                        Iniciar Jornada
+                    </button>
+                    <button id="btnFin" class="btn btn-fin-jornada" disabled>
+                        <i class="fas fa-stop me-2"></i>
+                        Finalizar Jornada
+                    </button>
                 </div>
 
-                <!-- Título de horario -->
-                <h3 class="text-center fw-bold mb-4">Su horario</h3>
-
-                <!-- Después de tu h3 "Su horario" -->
+                <!-- Tabla de horario -->
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover">
-                        <thead class="table-light">
+                    <table class="table table-hover">
+                        <thead>
                             <tr>
                                 <th>Día</th>
                                 <th>Hora Inicio</th>
@@ -123,7 +81,7 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor'; // por defecto 'profesor'
                             </tr>
                         </thead>
                         <tbody id="tablaHorario">
-                            <!-- Aquí se cargarán los datos dinámicamente -->
+                            <!-- El horario se cargará dinámicamente -->
                         </tbody>
                     </table>
                 </div>
@@ -131,26 +89,11 @@ $rolUsuario = $_SESSION['rol'] ?? 'profesor'; // por defecto 'profesor'
         </div>
     </div>
 
-    <!-- JS de Bootstrap local -->
-    <script src="../vendor/bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
+    <!-- JS de Bootstrap (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Tu JavaScript personalizado -->
+    <script src="./js/config.js"></script>
+    <script src="./js/common.js"></script>
     <script src="./js/app.js"></script>
-
-    <!-- Modal de Alertas -->
-    <div class="modal fade" id="alertModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Información</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body" id="alertModalBody">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </body>
 </html>

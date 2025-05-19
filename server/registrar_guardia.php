@@ -3,12 +3,21 @@
 // Recibe los datos de la guardia, verifica que no esté duplicada y la guarda en la base de datos.
 // Devuelve el resultado en formato JSON.
 
-session_start();
 require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/verify_token.php';
 
+header('Content-Type: application/json');
 $response = ['success' => false, 'message' => ''];
 
 try {
+    // Verificar el token
+    $tokenData = verificarToken();
+    
+    // Verificar que el usuario tenga permisos para registrar guardias
+    if ($tokenData['rol'] !== 'admin' && $tokenData['rol'] !== 'profesor') {
+        throw new Exception('No tienes permisos para registrar guardias');
+    }
+
     // Escapar todos los valores recibidos del formulario
     $fecha = mysqli_real_escape_string($conexion, $_POST['fecha']);
     $hora_inicio = mysqli_real_escape_string($conexion, $_POST['hora_inicio']);
@@ -70,6 +79,5 @@ try {
 }
 
 // Devuelve la respuesta en formato JSON
-header('Content-Type: application/json');
 echo json_encode($response);
 exit();

@@ -2,19 +2,21 @@
 // Este archivo genera un informe de ausencias según los filtros elegidos (docente, día, semana, mes o trimestre).
 // Devuelve los resultados en formato JSON para mostrarlos en la tabla del informe.
 
-session_start();
 require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/verify_token.php';
 
-// Solo permite el acceso a usuarios autenticados y con rol de admin
-if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true || $_SESSION['rol'] !== 'admin') {
-    header('Content-Type: application/json');
-    echo json_encode(['success' => false, 'message' => 'No autorizado']);
-    exit();
-}
-
+header('Content-Type: application/json');
 $response = ['success' => false, 'message' => '', 'ausencias' => []];
 
 try {
+    // Verificar el token
+    $tokenData = verificarToken();
+    
+    // Verificar que el usuario tenga rol de administrador
+    if ($tokenData['rol'] !== 'admin') {
+        throw new Exception('No tienes permisos para generar informes');
+    }
+
     // Recoge el tipo de informe y los filtros enviados desde el formulario
     $tipo_informe = $_POST['tipo_informe'];
     
@@ -84,6 +86,5 @@ try {
 }
 
 // Devuelve la respuesta en formato JSON
-header('Content-Type: application/json');
 echo json_encode($response);
 exit();
