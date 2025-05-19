@@ -8,6 +8,14 @@ require_once __DIR__ . '/verify_token.php';
 header('Content-Type: application/json');
 $response = ['success' => false, 'message' => '', 'asistencias' => []];
 
+// Si la petición es JSON, decodifica el body
+if (stripos($_SERVER['CONTENT_TYPE'] ?? '', 'application/json') !== false) {
+    $input = json_decode(file_get_contents('php://input'), true);
+    if (is_array($input)) {
+        $_POST = array_merge($_POST, $input);
+    }
+}
+
 try {
     // Verificar el token
     $tokenData = verificarToken();

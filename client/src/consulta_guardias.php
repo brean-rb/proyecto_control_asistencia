@@ -91,10 +91,11 @@
         </div>
     </div>
 
-    <script src="../js/config.js"></script>
-    <script src="../js/common.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/consulta_guardias.js"></script>
+    <script src="./js/config.js"></script>
+    <script src="./js/app.js"></script>
+    <script src="./js/common.js"></script>
+    <script src="./js/consulta_guardias.js"></script>
 
     <!-- Modal de Éxito para guardia reservada -->
     <div class="modal fade success-modal" id="successModal" tabindex="-1">

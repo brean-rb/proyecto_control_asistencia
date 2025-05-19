@@ -12,11 +12,6 @@ $resultado = ['success' => false, 'docentes' => []];
 try {
     // Verificar el token
     $tokenData = verificarToken();
-    
-    // Verificar que el usuario tenga rol de administrador
-    if ($tokenData['rol'] !== 'admin') {
-        throw new Exception('No tienes permisos para acceder a esta información');
-    }
 
     // Consulta para obtener el documento y el nombre completo de cada docente
     $sql = "SELECT document, CONCAT(nom, ' ', cognom1, ' ', cognom2) AS nombre FROM docent ORDER BY nom, cognom1, cognom2";

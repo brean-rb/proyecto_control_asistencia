@@ -35,14 +35,14 @@ try {
 
     // Registrar el cierre de sesión en el archivo de texto
     $auth = new Authentication();
-    try {
-        $decoded = $auth->decodeToken($token);
-        if (isset($decoded['id'])) {
-            $log = date('Y-m-d H:i:s') . " - " . $decoded['id'] . " cerró sesión\n";
+    $error = $auth->validaToken();
+    
+    if ($error === '') {
+        $decodedToken = $auth->getDecodedToken();
+        if (isset($decodedToken['id'])) {
+            $log = date('Y-m-d H:i:s') . " - " . $decodedToken['id'] . " cerró sesión\n";
             file_put_contents(__DIR__ . '/registro_sesion.txt', $log, FILE_APPEND);
         }
-    } catch (Exception $e) {
-        // Si el token es inválido, simplemente continuamos con el logout
     }
 
     // Devolver respuesta exitosa
@@ -50,4 +50,10 @@ try {
 } catch (Exception $e) {
     // Devolver respuesta de error
     sendJsonResponse('error', 'Error al cerrar sesión: ' . $e->getMessage(), 500);
+} catch (Error $e) {
+    // Capturar errores de PHP 7+
+    sendJsonResponse('error', 'Error interno del servidor: ' . $e->getMessage(), 500);
+} catch (Throwable $e) {
+    // Capturar cualquier otro tipo de error
+    sendJsonResponse('error', 'Error inesperado: ' . $e->getMessage(), 500);
 }

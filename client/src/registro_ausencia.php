@@ -195,15 +195,9 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/config.js"></script>
-    <script src="../js/common.js"></script>
+    <script src="./js/config.js"></script>
+    <script src="./js/app.js"></script>
+    <script src="./js/common.js"></script>
     <script src="./js/registro_ausencia.js"></script>
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        if (typeof CONFIG !== 'undefined' && CONFIG.handleNavVisibility) {
-          CONFIG.handleNavVisibility();
-        }
-      });
-    </script>
 </body>
 </html>

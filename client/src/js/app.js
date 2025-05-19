@@ -1,204 +1,92 @@
-// Este archivo controla la página principal del sistema de asistencia y guardias.
-// Aquí se gestionan los botones de inicio/fin de jornada y la carga del horario del profesor.
-
+// Este archivo maneja la inicialización común de todas las páginas
 document.addEventListener('DOMContentLoaded', function() {
-    // Verificar si el usuario está autenticado
-    if (!CONFIG.isAuthenticated()) {
-        window.location.href = 'login.php';
-        return;
-    }
-
-    // Obtener elementos del DOM
-    const btnInicio = document.getElementById('btnInicio');
-    const btnFin = document.getElementById('btnFin');
-    const userName = document.getElementById('userName');
-    const logoutForm = document.getElementById('logoutForm');
-    const alertContainer = document.getElementById('alertContainer');
-
-    // Mostrar el nombre del usuario y manejar visibilidad del nav
-    const user = CONFIG.getUser();
-    if (user) {
-        userName.textContent = user.nombre_completo || user.dni;
-        CONFIG.handleNavVisibility();
-        
-        // Mostrar/ocultar elementos según el rol
-        const adminElements = document.querySelectorAll('.admin-only');
-        adminElements.forEach(element => {
-            element.style.display = user.rol === 'admin' ? 'block' : 'none';
-        });
-    }
-
-    // Función para mostrar alertas
-    function mostrarAlerta(mensaje, tipo = 'error') {
-        const alertDiv = document.createElement('div');
-        alertDiv.className = `alert alert-${tipo === 'error' ? 'danger' : 'success'} alert-dismissible fade show`;
-        alertDiv.innerHTML = `
-            ${mensaje}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        `;
-        alertContainer.appendChild(alertDiv);
-        
-        // Auto-cerrar después de 5 segundos
-        setTimeout(() => {
-            alertDiv.remove();
-        }, 5000);
-    }
-
-    // Función para verificar el estado actual de la jornada
-    async function verificarEstadoJornada() {
-        try {
-            const response = await CONFIG.fetch(`${CONFIG.API_URL}?accion=${CONFIG.ACCIONES.ESTADO_JORNADA}`);
-            const data = await response.json();
-            
-            if (data.success) {
-                // Actualizar estado de los botones según la respuesta
-                if (data.jornada_iniciada) {
-                    btnInicio.disabled = true;
-                    btnInicio.classList.add('disabled');
-                    btnFin.disabled = false;
-                    btnFin.classList.remove('disabled');
-                } else {
-                    btnInicio.disabled = false;
-                    btnInicio.classList.remove('disabled');
-                    btnFin.disabled = true;
-                    btnFin.classList.add('disabled');
-                }
-            }
-        } catch (error) {
-            console.error('Error al verificar estado:', error);
-            mostrarAlerta(CONFIG.MENSAJES.ERROR_CONEXION);
-        }
-    }
-
-    // Verificar estado inicial
-    verificarEstadoJornada();
-
-    // Cuando se pulsa el botón de inicio de jornada
-    if (btnInicio) {
-        btnInicio.addEventListener('click', async function(e) {
-            e.preventDefault();
-            if (btnInicio.disabled) {
-                mostrarAlerta('Ya hay una jornada iniciada');
-                return;
-            }
-
-            try {
-                const response = await CONFIG.fetch(`${CONFIG.API_URL}?accion=${CONFIG.ACCIONES.INICIO_JORNADA}`);
-                const data = await response.json();
-                
-                mostrarAlerta(data.mensaje, data.success ? 'success' : 'error');
-                if (data.success) {
-                    verificarEstadoJornada();
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                mostrarAlerta(CONFIG.MENSAJES.ERROR_CONEXION);
-            }
-        });
-    }
-
-    // Cuando se pulsa el botón de fin de jornada
-    if (btnFin) {
-        btnFin.addEventListener('click', async function(e) {
-            e.preventDefault();
-            if (btnFin.disabled) {
-                mostrarAlerta('No hay ninguna jornada iniciada');
-                return;
-            }
-
-            try {
-                const response = await CONFIG.fetch(`${CONFIG.API_URL}?accion=${CONFIG.ACCIONES.FIN_JORNADA}`);
-                const data = await response.json();
-                
-                mostrarAlerta(data.mensaje, data.success ? 'success' : 'error');
-                if (data.success) {
-                    verificarEstadoJornada();
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                mostrarAlerta(CONFIG.MENSAJES.ERROR_CONEXION);
-            }
-        });
-    }
-
-    // Manejar el logout
-    if (logoutForm) {
-        logoutForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            try {
-                const response = await CONFIG.fetch(`${CONFIG.API_URL}?accion=${CONFIG.ACCIONES.LOGOUT}`);
-                const data = await response.json();
-                
-                if (data.success) {
-                    // Limpiar el localStorage
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('user');
-                    
-                    // Redirigir al login
-                    window.location.href = 'login.php';
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                mostrarAlerta(CONFIG.MENSAJES.ERROR_CONEXION);
-            }
-        });
-    }
-
-    // Cargar el horario del profesor
-    cargarHorario();
-});
-
-// Esta función pide al servidor el horario del profesor y lo muestra en la tabla
-async function cargarHorario() {
     try {
-        const response = await CONFIG.fetch(`${CONFIG.API_URL}?accion=${CONFIG.ACCIONES.HORARIOS}`);
-        const data = await response.json();
-        
-        if (data.success) {
-            const tbody = document.getElementById('tablaHorario');
-            tbody.innerHTML = '';
+        // Verificar si el usuario está autenticado
+        if (!CONFIG.isAuthenticated()) {
+            window.location.href = 'login.php';
+            return;
+        }
 
-            if (data.horario.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="6" class="text-center">No hay horario disponible</td>
-                    </tr>`;
-                return;
+        // Obtener el usuario actual
+        const user = CONFIG.getUser();
+        if (!user) {
+            console.warn('No se pudo obtener la información del usuario');
+            return;
+        }
+
+        // Actualizar el nombre de usuario solo en la página principal
+        if (window.location.pathname.endsWith('index.php')) {
+            const userNameElement = document.getElementById('userName');
+            if (userNameElement) {
+                userNameElement.textContent = user.nombre || 'Usuario';
             }
+        }
 
-            // Diccionario para traducir la letra del día a su nombre
-            const diasSemana = {
-                'L': 'Lunes',
-                'M': 'Martes',
-                'X': 'Miércoles',
-                'J': 'Jueves',
-                'V': 'Viernes'
-            };
+        // Manejar la visibilidad del nav según el rol
+        try {
+            CONFIG.handleNavVisibility();
+        } catch (error) {
+            console.warn('Error al manejar la visibilidad del nav:', error);
+        }
 
-            data.horario.forEach(clase => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${diasSemana[clase.dia_setmana] || clase.dia_setmana}</td>
-                    <td>${clase.hora_desde}</td>
-                    <td>${clase.hora_fins}</td>
-                    <td>${clase.asignatura || 'No disponible'}</td>
-                    <td>${clase.grupo}</td>
-                    <td>${clase.aula}</td>
-                `;
-                tbody.appendChild(tr);
+        // Manejar el logout
+        const logoutForm = document.getElementById('logoutForm');
+        if (logoutForm) {
+            logoutForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                try {
+                    console.log('Iniciando proceso de logout...');
+                    const response = await fetch(`${CONFIG.API_URL}?accion=logout`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    console.log('Respuesta recibida:', response);
+                    console.log('Status:', response.status);
+                    console.log('Headers:', response.headers);
+                    
+                    // Verificar si la respuesta es JSON
+                    const contentType = response.headers.get('content-type');
+                    console.log('Content-Type:', contentType);
+                    
+                    if (!contentType || !contentType.includes('application/json')) {
+                        throw new Error('La respuesta del servidor no es JSON válido');
+                    }
+
+                    // Obtener el texto de la respuesta primero
+                    const responseText = await response.text();
+                    console.log('Respuesta texto:', responseText);
+                    
+                    // Intentar parsear la respuesta JSON
+                    let data;
+                    try {
+                        data = JSON.parse(responseText);
+                    } catch (e) {
+                        console.error('Error al parsear JSON:', e);
+                        throw new Error('Error al procesar la respuesta del servidor');
+                    }
+                    
+                    console.log('Datos parseados:', data);
+                    
+                    if (data.status === 'success') {
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('user');
+                        window.location.href = 'login.php';
+                    } else {
+                        throw new Error(data.message || 'Error al cerrar sesión');
+                    }
+                } catch (error) {
+                    alert('Error al cerrar sesión: ' + error.message);
+                }
             });
         } else {
-            throw new Error(data.message || CONFIG.MENSAJES.ERROR_SERVIDOR);
+            console.warn('Formulario de logout no encontrado');
         }
     } catch (error) {
-        console.error('Error:', error);
-        const tbody = document.getElementById('tablaHorario');
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="6" class="text-center text-danger">
-                    Error al cargar el horario: ${error.message}
-                </td>
-            </tr>`;
+        console.warn('Error en la inicialización de la página:', error);
     }
-}
+}); 

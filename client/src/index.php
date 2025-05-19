@@ -89,11 +89,31 @@
         </div>
     </div>
 
-    <!-- JS de Bootstrap (CDN) -->
+    <!-- Modal de Inicio de Jornada -->
+    <div class="modal fade" id="modalInicioJornada" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Iniciar Jornada</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro de que deseas iniciar tu jornada laboral?</p>
+                    <p class="text-muted">Hora actual: <span id="horaActual"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="confirmarInicio">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Tu JavaScript personalizado -->
     <script src="./js/config.js"></script>
-    <script src="./js/common.js"></script>
     <script src="./js/app.js"></script>
+    <script src="./js/common.js"></script>
+    <script src="./js/index.js"></script>
 </body>
 </html>

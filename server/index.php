@@ -5,8 +5,12 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
+// Activar el manejo de errores
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+
 require_once __DIR__.'/config/config.php';
-require_once __DIR__.'/verify_token.php';
+require_once __DIR__.'/Authentication.php';
 
 // Función para sanitizar inputs
 function sanitizarInput($input) {
@@ -14,7 +18,8 @@ function sanitizarInput($input) {
 }
 
 // Función para manejar errores
-function manejarError($mensaje) {
+function manejarError($mensaje, $code = 500) {
+    http_response_code($code);
     echo json_encode(['status' => 'error', 'message' => $mensaje]);
     exit();
 }
@@ -28,7 +33,11 @@ function manejarExito($datos, $mensaje = '') {
     exit();
 }
 
-if(isset($_REQUEST['accion'])) {
+try {
+    if(!isset($_REQUEST['accion'])) {
+        manejarError('No se especificó una acción', 400);
+    }
+
     $accion = sanitizarInput($_REQUEST['accion']);
     
     // Verificar token para todas las acciones excepto login
@@ -37,17 +46,17 @@ if(isset($_REQUEST['accion'])) {
         $token = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : null;
         
         if (!$token) {
-            manejarError('No se proporcionó token de autenticación');
+            manejarError('No se proporcionó token de autenticación', 401);
         }
         
         try {
             $auth = new Authentication();
             $error = $auth->validaToken();
             if ($error !== '') {
-                manejarError($error);
+                manejarError($error, 401);
             }
         } catch (Exception $e) {
-            manejarError('Token inválido o expirado');
+            manejarError('Token inválido o expirado', 401);
         }
     }
     
@@ -58,7 +67,7 @@ if(isset($_REQUEST['accion'])) {
             if ($error === '') {
                 manejarExito(null, 'Token válido');
             } else {
-                manejarError($error);
+                manejarError($error, 401);
             }
             break;
             
@@ -122,8 +131,12 @@ if(isset($_REQUEST['accion'])) {
             break;
             
         default:
-            manejarError('Acción no reconocida');
+            manejarError('Acción no reconocida', 400);
     }
-} else {
-    manejarError('No se especificó una acción');
+} catch (Exception $e) {
+    manejarError('Error en el servidor: ' . $e->getMessage());
+} catch (Error $e) {
+    manejarError('Error interno del servidor: ' . $e->getMessage());
+} catch (Throwable $e) {
+    manejarError('Error inesperado: ' . $e->getMessage());
 }
